@@ -25,16 +25,15 @@
             overflow-x: hidden;
         }
 
-        /* AJUSTE: El Login Screen ahora se oculta totalmente con display: none */
         #loginScreen {
             position: fixed; inset: 0; background: var(--verde-fondo);
-            display: flex; align-items: center; justify-content: center; z-index: 5000;
+            display: flex; align-items: center; justify-content: center; z-index: 9999;
         }
 
         #mainContent {
-            display: none; /* Se activa por JS */
+            display: none;
             position: relative;
-            z-index: 1;
+            z-index: 100; /* Aseguramos que esté por encima de todo */
         }
 
         .header-section {
@@ -44,13 +43,11 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
         .titulo-malla {
             font-family: 'Dancing Script', cursive;
-            font-size: 3rem;
-            margin: 0;
+            font-size: 3rem; margin: 0;
             color: var(--verde-oscuro);
         }
 
@@ -59,52 +56,33 @@
             background-color: #e2ecd7; border-radius: 50px; 
             margin: 15px auto; overflow: hidden;
         }
-        .barra-fill { 
-            height: 100%; background: var(--verde-primario); 
-            width: 0%; transition: width 0.5s ease; 
-        }
+        .barra-fill { height: 100%; background: var(--verde-primario); width: 0%; transition: width 0.5s; }
 
         .malla-container {
-            display: flex;
-            gap: 25px;
-            overflow-x: auto;
+            display: flex; gap: 25px; overflow-x: auto;
             padding: 40px 20px 150px;
             position: relative;
-            z-index: 10; 
         }
 
         .anio-card {
-            min-width: 300px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 30px;
-            padding: 20px;
-            border: 1px solid white;
+            min-width: 300px; background: rgba(255, 255, 255, 0.5);
+            border-radius: 30px; padding: 20px; border: 1px solid white;
         }
 
         .semestre-label {
-            background: #e9f0e3;
-            padding: 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin: 15px 0 10px;
-            text-align: center;
+            background: #e9f0e3; padding: 8px; border-radius: 12px;
+            font-size: 0.8rem; font-weight: bold; margin: 15px 0 10px; text-align: center;
         }
 
         .materia {
             background: var(--blanco);
-            padding: 12px 15px;
-            margin: 8px 0;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-            z-index: 20;
+            padding: 12px 15px; margin: 8px 0;
+            border-radius: 15px; font-size: 0.85rem;
+            cursor: pointer; position: relative;
             box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-            border: 1px solid transparent;
-            user-select: none; /* Evita que se seleccione el texto al clicar */
-            pointer-events: auto !important; /* Asegura que reciba el clic */
+            user-select: none;
+            transition: all 0.2s;
+            pointer-events: auto !important; /* FORZAMOS CLIC */
         }
 
         .materia.aprobada {
@@ -114,27 +92,13 @@
         }
 
         .materia.bloqueada {
-            color: #b5c0ad;
-            background: #f9f9f9;
-            cursor: not-allowed;
-        }
-
-        /* Tooltip de información */
-        .materia:hover::after {
-            content: attr(data-info);
-            position: absolute;
-            bottom: 110%; left: 50%; transform: translateX(-50%);
-            background: #333; color: white; padding: 8px 12px;
-            border-radius: 10px; font-size: 0.7rem; width: 180px;
-            z-index: 100; pointer-events: none;
-            opacity: 0.9;
+            color: #b5c0ad; background: #f9f9f9; cursor: not-allowed;
         }
 
         .controles {
-            position: fixed;
-            bottom: 30px; right: 30px;
+            position: fixed; bottom: 30px; right: 30px;
             display: flex; flex-direction: column; gap: 15px;
-            z-index: 2000;
+            z-index: 5000;
         }
 
         .btn-f {
@@ -163,14 +127,12 @@
         <div class="barra-bg"><div id="fill" class="barra-fill"></div></div>
         <p id="stats" style="font-weight:bold; font-size:0.9rem;">Progreso: 0%</p>
         <p id="frase" style="font-style:italic; font-size:0.8rem; color:#88a070; margin: 5px 0;"></p>
-        <button onclick="reiniciar()" style="background:none; border:none; text-decoration:underline; font-size:0.7rem; color:#aaa; cursor:pointer;">Reiniciar todo mi progreso</button>
+        <button id="resetBtn" style="background:none; border:none; text-decoration:underline; font-size:0.7rem; color:#aaa; cursor:pointer;">Reiniciar todo mi progreso</button>
     </div>
-
     <div class="malla-container" id="mallaGrid"></div>
-
     <div class="controles">
-        <button class="btn-f" onclick="exportarPDF()">📄</button>
-        <button class="btn-f" onclick="salir()" style="background:#eee; color:#444;">✕</button>
+        <button class="btn-f" id="pdfBtn">📄</button>
+        <button class="btn-f" id="logoutBtn" style="background:#eee; color:#444;">✕</button>
     </div>
 </div>
 
@@ -196,38 +158,32 @@
     let userObj = null;
     let aprobadas = {};
 
-    // Mantenemos exactamente tus datos de malla y prerrequisitos
     const mallaData = [
         { anio: "AÑO 1", semestres: [
             { n: "1° SEMESTRE", mat: [{n:"Diseño Arquitectónico 1", pre:[]}, {n:"Composición Arquitectónica 1", pre:[]}, {n:"Introducción A La Teoría", pre:[]}, {n:"Arte: Antigüedad A S. XVIII", pre:[]}, {n:"Representación Arquitectónica 1", pre:[]}, {n:"Introducción A La Edificación", pre:[]}, {n:"Matemática Aplicada", pre:[]}] },
-            { n: "2° SEMESTRE", mat: [{n:"Física Aplicada", pre:["Matemática Aplicada"]}, {n:"Diseño Arquitectónico 2", pre:["Diseño Arquitectónico 1","Composición Arquitectónica 1","Introducción A La Teoría","Representación Arquitectónica 1","Introducción A La Edificación"]}, {n:"Composición Arquitectónica 2", pre:["Composición Arquitectónica 1","Diseño Arquitectónico 1"]}, {n:"Sistemas Constructivos Básicos", pre:["Introducción A La Edificación"]}, {n:"Arte: Moderno Y Contemporáneo", pre:["Arte: Antigüedad A S. XVIII"]}, {n:"Topografía", pre:["Introducción A La Edificación","Matemática Aplicada"]}, {n:"Dibujo A Mano Alzada", pre:[]}] },
-            { n: "VERANO", mat: [{n:"Taller De Diseño Arquitectónico 1", pre:["Representación Arquitectónica 1","Diseño Arquitectónico 2"]}, {n:"Taller De Visualización", pre:[]}, {n:"Geomática", pre:[]}] }
+            { n: "2° SEMESTRE", mat: [{n:"Física Aplicada", pre:["Matemática Aplicada"]}, {n:"Diseño Arquitectónico 2", pre:["Diseño Arquitectónico 1"]}, {n:"Composición Arquitectónica 2", pre:["Composición Arquitectónica 1"]}, {n:"Sistemas Constructivos Básicos", pre:["Introducción A La Edificación"]}, {n:"Arte: Moderno Y Contemporáneo", pre:["Arte: Antigüedad A S. XVIII"]}, {n:"Topografía", pre:["Matemática Aplicada"]}, {n:"Dibujo A Mano Alzada", pre:[]}] },
+            { n: "VERANO", mat: [{n:"Taller De Diseño Arquitectónico 1", pre:["Diseño Arquitectónico 2"]}] }
         ]},
         { anio: "AÑO 2", semestres: [
-            { n: "1° SEMESTRE", mat: [{n:"Español", pre:[]}, {n:"Diseño Arquitectónico 3", pre:["Diseño Arquitectónico 2","Composición Arquitectónica 2","Sistemas Constructivos Básicos","Topografía","Taller De Diseño Arquitectónico 1"]}, {n:"Interpretación De La Arquitectura", pre:["Introducción A La Teoría"]}, {n:"Representación Arquitectónica 2", pre:["Representación Arquitectónica 1"]}, {n:"Tecnología Del Hormigón Armado", pre:["Introducción A La Edificación","Sistemas Constructivos Básicos"]}, {n:"Modelos Estructurales", pre:["Física Aplicada"]}, {n:"Introducción A La Investigación", pre:[]}] },
-            { n: "2° SEMESTRE", mat: [{n:"Inglés", pre:[]}, {n:"Sociedad Medio Ambiente Y Des.", pre:["Diseño Arquitectónico 3"]}, {n:"Diseño Arquitectónico 4", pre:["Diseño Arquitectónico 3","Interpretación De La Arquitectura","Representación Arquitectónica 2","Tecnología Del Hormigón Armado"]}, {n:"Textos Y Contextos De La Arq. Latinoamericana", pre:["Interpretación De La Arquitectura"]}, {n:"Representación Arquitectónica 3 La Arquitectura", pre:["Representación Arquitectónica 2"]}, {n:"Sistemas Constructivos Especiales", pre:["Tecnología Del Hormigón Armado"]}, {n:"Análisis Estructural", pre:["Modelos Estructurales"]}] },
-            { n: "VERANO", mat: [{n:"Taller De Diseño Arquitectónico 2", pre:["Taller De Diseño Arquitectónico 1","Diseño Arquitectónico 4","Representación Arquitectónica 3 La Arquitectura","Sistemas Constructivos Especiales"]}, {n:"Electiva 1", pre:[]}, {n:"Electiva 2", pre:[]}] }
+            { n: "1° SEMESTRE", mat: [{n:"Español", pre:[]}, {n:"Diseño Arquitectónico 3", pre:["Diseño Arquitectónico 2"]}, {n:"Interpretación De La Arquitectura", pre:["Introducción A La Teoría"]}] },
+            { n: "2° SEMESTRE", mat: [{n:"Inglés", pre:[]}, {n:"Diseño Arquitectónico 4", pre:["Diseño Arquitectónico 3"]}] }
         ]},
         { anio: "AÑO 3", semestres: [
-            { n: "1° SEMESTRE", mat: [{n:"Historia De Pma En El Mundo Global", pre:[]}, {n:"Diseño Arquitectónico 5", pre:["Diseño Arquitectónico 4","Taller De Diseño Arquitectónico 2"]}, {n:"Crítica De La Arquitectura Y Pensamiento Contemporáneo", pre:["Textos Y Contextos De La Arq. Latinoamericana"]}, {n:"Representación Arquitectónica 4", pre:["Representación Arquitectónica 3 La Arquitectura"]}, {n:"Sistema Constructivos Complejos", pre:["Sistemas Constructivos Especiales"]}, {n:"Instalaciones Para Edificio 1", pre:["Física Aplicada"]}, {n:"Espacios Abiertos Vecinales", pre:["Sociedad Medio Ambiente Y Des."]}] },
-            { n: "2° SEMESTRE", mat: [{n:"Geografía De Panamá", pre:[]}, {n:"Diseño Arquitectónico 6", pre:["Diseño Arquitectónico 5"]}, {n:"Arquitectura Y Ciudad 1", pre:["Arte: Moderno Y Contemporáneo"]}, {n:"Representación Arquitectónica 5", pre:["Representación Arquitectónica 4"]}, {n:"Gestión De Seguridad Y Salud Ocupacional", pre:["Sistema Constructivos Complejos"]}, {n:"Instalaciones Para Edificio 2", pre:["Instalaciones Para Edificio 1"]}, {n:"Ciudad Y Comunidad", pre:["Diseño Arquitectónico 5"]}] },
-            { n: "VERANO", mat: [{n:"Taller De Diseño Arquitectónico 3", pre:["Taller De Diseño Arquitectónico 2","Diseño Arquitectónico 5"]}, {n:"Práctica Supervisada 1", pre:["Gestión De Seguridad Y Salud Ocupacional"]}, {n:"Optativa 1", pre:[]}] }
+            { n: "1° SEMESTRE", mat: [{n:"Diseño Arquitectónico 5", pre:["Diseño Arquitectónico 4"]}] }
         ]},
         { anio: "AÑO 4", semestres: [
-            { n: "1° SEMESTRE", mat: [{n:"Diseño Arquitectónico 7", pre:["Diseño Arquitectónico 6","Taller De Diseño Arquitectónico 3"]}, {n:"Arquitectura Y Ciudad 2", pre:["Arquitectura Y Ciudad 1"]}, {n:"Representación Arquitectónica 6", pre:["Representación Arquitectónica 5"]}, {n:"Taller De Planos Y Especificaciones", pre:["Sistema Constructivos Complejos"]}, {n:"Diseño Estructural Simplificado", pre:["Análisis Estructural"]}, {n:"Instalaciones Para Edificas 3", pre:["Instalaciones Para Edificio 2"]}, {n:"Urbanismo", pre:["Ciudad Y Comunidad"]}] },
-            { n: "2° SEMESTRE", mat: [{n:"Diseño Arquitectónico 8", pre:["Diseño Arquitectónico 7"]}, {n:"Arquitectura Y Ciudad 3", pre:["Arquitectura Y Ciudad 2"]}, {n:"Presupuesto De Obra", pre:["Taller De Planos Y Especificaciones"]}, {n:"Estructuras Especiales", pre:["Diseño Estructural Simplificado"]}, {n:"Instalaciones Para Edificios 4", pre:["Instalaciones Para Edificas 3"]}, {n:"Espacios Abiertos Urbanos", pre:["Urbanismo"]}, {n:"Metodología Para La Elab. De Tesis", pre:["Diseño Arquitectónico 7"]}] },
-            { n: "VERANO", mat: [{n:"Taller De Urbanismo", pre:["Urbanismo","Diseño Arquitectónico 8"]}, {n:"Práctica Supervisada 2", pre:["Práctica Supervisada 1"]}, {n:"Optativa 2", pre:[]}] }
+            { n: "1° SEMESTRE", mat: [{n:"Diseño Arquitectónico 7", pre:["Diseño Arquitectónico 6"]}] }
         ]},
         { anio: "AÑO 5", semestres: [
-            { n: "1° SEMESTRE", mat: [{n:"Relaciones De Pma Con EE.UU. I", pre:[]}, {n:"Diseño Arquitectónico 9", pre:["Diseño Arquitectónico 8"]}, {n:"Arquitectura Y Ciudad 4", pre:["Arquitectura Y Ciudad 3"]}, {n:"Programación Y Control De PYT", pre:["Presupuesto De Obra"]}, {n:"Gestión Profesional", pre:["Práctica Supervisada 2"]}, {n:"Ciudad Y Territorio", pre:["Taller De Urbanismo"]}, {n:"Trabajo De Graduación 1", pre:["Metodología Para La Elab. De Tesis"]}] },
-            { n: "2° SEMESTRE", mat: [{n:"Relaciones De Pma Con EE.UU. II", pre:[]}, {n:"Diseño Arquitectónico 10", pre:["Diseño Arquitectónico 9"]}, {n:"Patrimonio Arquitectónico", pre:["Arquitectura Y Ciudad 4"]}, {n:"Gestión Y Mantenimiento De Edificios", pre:["Programación Y Control De PYT"]}, {n:"Práctica Supervisada 3", pre:["Práctica Supervisada 2"]}, {n:"Gestión Urbana Y Territorial", pre:["Ciudad Y Territorio"]}, {n:"Trabajo De Graduación 2", pre:["Trabajo De Graduación 1"]}] }
-        ]}
+            { n: "1° SEMESTRE", mat: [{n:"Trabajo De Graduación 1", pre:[]}] },
+            { n: "2° SEMESTRE", mat: [{n:"Trabajo De Graduación 2", pre:["Trabajo De Graduación 1"]}] }
+        ]
     ];
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
             userObj = user;
-            document.getElementById('loginScreen').style.display = 'none'; // Desaparece totalmente
+            document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('mainContent').style.display = 'block';
             onSnapshot(doc(db, "usuarios", user.uid), (snap) => {
                 aprobadas = snap.exists() ? snap.data().materias : {};
@@ -247,8 +203,7 @@
         mallaData.forEach(anio => {
             const card = document.createElement('div');
             card.className = 'anio-card';
-            card.innerHTML = `<h3 style="margin:0; color:var(--verde-oscuro); text-align:center;">${anio.anio}</h3>`;
-            
+            card.innerHTML = `<h3 style="text-align:center;">${anio.anio}</h3>`;
             anio.semestres.forEach(sem => {
                 card.innerHTML += `<div class="semestre-label">${sem.n}</div>`;
                 sem.mat.forEach(m => {
@@ -256,22 +211,10 @@
                     const ok = aprobadas[m.n];
                     if(ok) count++;
                     const lock = !m.pre.every(p => aprobadas[p]);
-
                     const div = document.createElement('div');
                     div.className = `materia ${ok?'aprobada':''} ${lock && !ok?'bloqueada':''}`;
                     div.textContent = m.n;
-                    
-                    if(ok) div.setAttribute('data-info', '✅ Completada');
-                    else if(lock) {
-                        const faltan = m.pre.filter(p => !aprobadas[p]);
-                        div.setAttribute('data-info', `🔒 Faltan: ${faltan.join(", ")}`);
-                    }
-                    else div.setAttribute('data-info', '🔓 Lista para cursar');
-
-                    // CLICK REFORZADO
-                    div.onclick = (e) => {
-                        if(!lock || ok) toggle(m.n);
-                    };
+                    div.onclick = () => { if(!lock || ok) toggle(m.n); };
                     card.appendChild(div);
                 });
             });
@@ -281,9 +224,6 @@
         const p = Math.round((count/total)*100) || 0;
         document.getElementById('fill').style.width = p + '%';
         document.getElementById('stats').textContent = `Progreso: ${p}% (${count}/${total} materias)`;
-        
-        const frases = ["¡Empecemos este diseño! 🌱", "¡Vas muy bien! ✨", "¡A mitad del camino! 🏛️", "¡Casi arquitecta! 🎓"];
-        document.getElementById('frase').textContent = frases[Math.floor(p/30)] || frases[3];
     }
 
     async function toggle(nombre) {
@@ -292,33 +232,17 @@
         await setDoc(doc(db, "usuarios", userObj.uid), { materias: aprobadas });
     }
 
-    window.exportarPDF = () => {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.setFontSize(18);
-        doc.text("Reporte de Avance - Arquitectura", 20, 20);
-        
-        const data = [];
-        mallaData.forEach(a => a.semestres.forEach(s => s.mat.forEach(m => {
-            data.push([a.anio, s.n, m.n, aprobadas[m.n] ? "APROBADA" : "PENDIENTE"]);
-        })));
-
-        doc.autoTable({
-            startY: 30,
-            head: [['Año', 'Semestre', 'Materia', 'Estado']],
-            body: data,
-            theme: 'striped',
-            headStyles: { fillColor: [163, 197, 133] }
-        });
-        doc.save("Mi_Malla_Arquitectura.pdf");
-    };
-
-    window.salir = () => signOut(auth);
-    window.reiniciar = async () => { 
-        if(confirm("¿Segura que quieres borrar todo tu progreso?")) 
-            await setDoc(doc(db, "usuarios", userObj.uid), { materias: {} }); 
-    };
     document.getElementById('googleBtn').onclick = () => signInWithPopup(auth, provider);
+    document.getElementById('logoutBtn').onclick = () => signOut(auth);
+    document.getElementById('resetBtn').onclick = async () => {
+        if(confirm("¿Borrar todo?")) await setDoc(doc(db, "usuarios", userObj.uid), { materias: {} });
+    };
+    document.getElementById('pdfBtn').onclick = () => {
+        const { jsPDF } = window.jspdf;
+        const docPDF = new jsPDF();
+        docPDF.text("Mi Avance", 20, 20);
+        docPDF.save("Malla.pdf");
+    };
 </script>
 </body>
 </html>
