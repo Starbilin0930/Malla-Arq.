@@ -32,145 +32,125 @@
             top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--verde-fondo);
             display: flex; justify-content: center; align-items: center;
-            z-index: 5000;
+            z-index: 9999;
         }
 
-        .login-card {
-            background: var(--blanco);
-            padding: 50px;
-            border-radius: 40px;
-            box-shadow: 0 15px 35px rgba(107, 142, 35, 0.1);
-            text-align: center;
-            width: 320px;
-            border: 1px solid rgba(163, 197, 133, 0.3);
+        /* --- ENCABEZADO (CON FIX DE CLIC) --- */
+        .header-container {
+            position: relative;
+            z-index: 5; /* Bajo para no tapar nada */
+            pointer-events: none; /* Los clics pasan a través hacia las materias */
+            padding-top: 40px;
         }
-
-        /* --- CONTENIDO PRINCIPAL --- */
-        #mainContent { 
-            display: none; 
-            padding: 20px; 
-            text-align: center; 
-            animation: fadeIn 0.8s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        
+        /* Habilitar clics solo en los botones del header */
+        #reiniciarBtn { pointer-events: auto; }
 
         .titulo-malla {
             font-family: 'Dancing Script', cursive;
             font-size: 3.5rem;
-            margin: 40px 0 10px;
+            margin: 0;
             color: var(--verde-oscuro);
         }
 
         /* Barra de Progreso */
         .progreso-container { margin: 20px auto 40px; max-width: 800px; }
         .barra-bg {
-            width: 100%; height: 16px; background-color: #e2ecd7;
-            border-radius: 50px; overflow: hidden; margin: 15px 0;
+            width: 90%; height: 16px; background-color: #e2ecd7;
+            border-radius: 50px; overflow: hidden; margin: 15px auto;
         }
         .barra-fill { 
             height: 100%; background: linear-gradient(90deg, var(--verde-primario), #b8d59a); 
-            width: 0%; transition: width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            width: 0%; transition: width 1s ease; 
         }
 
-        .frase-motivadora {
-            font-style: italic; font-weight: 300; margin-bottom: 20px;
-            color: #88a070; min-height: 1.2em;
-        }
-
-        /* Malla Cards */
+        /* --- MALLA (Z-INDEX ALTO PARA CLICS) --- */
         .malla-scroll { 
             display: flex; 
             gap: 30px; 
             overflow-x: auto; 
-            padding: 30px; 
-            padding-bottom: 120px; /* ESPACIO PARA CLICAR ABAJO */
-            scrollbar-width: none; 
+            padding: 20px 30px 150px 30px; 
+            position: relative;
+            z-index: 100; /* ESTO ASEGURA QUE ESTÉ POR ENCIMA DE TODO */
         }
         
         .anio-card { 
-            min-width: 300px; background: rgba(255, 255, 255, 0.6); 
-            border-radius: 35px; padding: 25px; 
-            backdrop-filter: blur(5px);
+            min-width: 300px; 
+            background: rgba(255, 255, 255, 0.7); 
+            border-radius: 35px; 
+            padding: 25px; 
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.8);
-        }
-
-        .anio-titulo { 
-            font-size: 1.8rem; font-weight: 700; color: var(--verde-oscuro);
-            border-bottom: 2px solid #dce6d1; padding-bottom: 10px; margin-bottom: 20px;
-        }
-
-        .semestre-label { 
-            background: #f0f4eb; padding: 10px; border-radius: 15px; 
-            font-size: 0.9rem; font-weight: 700; margin: 20px 0 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
         /* MATERIAS */
         .materia {
-            background: var(--blanco); padding: 14px; margin: 10px 0; border-radius: 18px;
-            font-size: 0.85rem; cursor: pointer; position: relative; transition: 0.3s;
-            z-index: 10;
+            background: var(--blanco); 
+            padding: 14px; 
+            margin: 12px 0; 
+            border-radius: 18px;
+            font-size: 0.85rem; 
+            cursor: pointer; 
+            position: relative; 
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
+        
+        .materia:active { transform: scale(0.95); }
+
         .materia.aprobada { 
             background-color: var(--verde-primario) !important; 
             color: white; 
-            text-decoration: line-through; /* TACHADO */
+            text-decoration: line-through; 
         }
         .materia.bloqueada { color: #bcc7b0; background: #fdfdfd; cursor: not-allowed; }
 
-        /* Tooltip (Mensajitos al pasar el mouse) */
+        /* Tooltip */
         .materia::after {
             content: attr(data-tooltip);
-            position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
-            background: rgba(76, 102, 43, 0.9); color: white; padding: 10px 15px; border-radius: 15px;
-            font-size: 0.75rem; width: 180px; z-index: 100; opacity: 0; visibility: hidden; transition: 0.3s;
+            position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%);
+            background: rgba(40, 60, 20, 0.95); color: white; padding: 8px 12px; border-radius: 12px;
+            font-size: 0.75rem; width: 160px; z-index: 200; opacity: 0; visibility: hidden; transition: 0.2s;
+            pointer-events: none;
         }
         .materia:hover::after { opacity: 1; visibility: visible; }
 
         /* CONTROLES FLOTANTES */
         .controles-flotantes {
             position: fixed; bottom: 30px; right: 30px;
-            display: flex; flex-direction: column; gap: 15px; z-index: 2000;
-            pointer-events: none; /* CLICS PASAN A TRAVÉS */
+            display: flex; flex-direction: column; gap: 15px; z-index: 1000;
+            pointer-events: none;
         }
-
         .btn-float {
             width: 60px; height: 60px; border-radius: 50%; border: none;
             background: var(--verde-primario); color: white; font-size: 1.5rem;
             cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             display: flex; align-items: center; justify-content: center;
-            pointer-events: auto; /* BOTÓN SÍ RECIBE CLIC */
-        }
-
-        .btn-google { 
-            background: white; border: 1px solid #eee; padding: 14px; border-radius: 50px; 
-            width: 100%; cursor: pointer; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px;
+            pointer-events: auto;
         }
     </style>
 </head>
 <body>
 
     <div id="loginScreen">
-        <div class="login-card">
-            <h1 style="font-family: 'Dancing Script'; font-size: 2.8rem; color: var(--verde-oscuro);">Bienvenida ✨</h1>
-            <p style="color: #88a070; margin-bottom: 20px;">Tu futuro diseño comienza aquí</p>
-            <button id="googleBtn" class="btn-google">
+        <div style="background: white; padding: 50px; border-radius: 40px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.1);">
+            <h1 style="font-family: 'Dancing Script'; font-size: 2.5rem; color: var(--verde-oscuro);">Hola Arquitecta ✨</h1>
+            <button id="googleBtn" style="background: white; border: 1px solid #eee; padding: 14px; border-radius: 50px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 10px; margin-top: 20px;">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="18"> Entrar con Google
             </button>
         </div>
     </div>
 
-    <div id="mainContent">
-        <h1 class="titulo-malla">Malla Curricular Arquitectura</h1>
-        
-        <div class="progreso-container">
-            <p id="txtProgreso" style="font-weight: 700; margin-bottom: 5px;">Avance: 0%</p>
-            <div class="barra-bg"><div id="fillProgreso" class="barra-fill"></div></div>
-            <p id="fraseMotivadora" class="frase-motivadora"></p>
-            <button id="reiniciarBtn" style="background: none; border: none; color: #aaa; cursor: pointer; font-size: 0.7rem; text-decoration: underline;">Reiniciar mi progreso</button>
+    <div id="mainContent" style="display:none;">
+        <div class="header-container">
+            <h1 class="titulo-malla">Malla Curricular Arquitectura</h1>
+            <div class="progreso-container">
+                <p id="txtProgreso" style="font-weight: 700;">Avance: 0%</p>
+                <div class="barra-bg"><div id="fillProgreso" class="barra-fill"></div></div>
+                <p id="fraseMotivadora" style="font-style: italic; color: #88a070; margin-bottom: 5px;"></p>
+                <button id="reiniciarBtn">Reiniciar progreso</button>
+            </div>
         </div>
 
         <div class="malla-scroll" id="mallaGrid"></div>
@@ -203,7 +183,7 @@
     let usuarioActual = null;
     let aprobadas = {};
 
-    // DATOS COMPLETOS DE LA MALLA
+    // DATOS MALLA
     const mallaData = [
         { anio: "AÑO 1", semestres: [
             { nombre: "1° SEMESTRE", materias: [{nombre:"Diseño Arquitectónico 1", prereq:[]}, {nombre:"Composición Arquitectónica 1", prereq:[]}, {nombre:"Introducción A La Teoría", prereq:[]}, {nombre:"Arte: Antigüedad A S. XVIII", prereq:[]}, {nombre:"Representación Arquitectónica 1", prereq:[]}, {nombre:"Introducción A La Edificación", prereq:[]}, {nombre:"Matemática Aplicada", prereq:[]}] },
@@ -242,20 +222,8 @@
             });
         } else {
             document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('mainContent').style.display = 'none';
         }
     });
-
-    function actualizarFrase(porcentaje) {
-        const frases = [
-            { p: 0, t: "Todo gran proyecto empieza con una idea 🌱" },
-            { p: 10, t: "¡Buen comienzo! Tus primeros trazos están listos ✨" },
-            { p: 50, t: "¡Mitad de carrera! Ya eres casi una experta 🏛️" },
-            { p: 100, t: "¡Felicidades, Arquitecta! El mundo es tu lienzo 🎓" }
-        ];
-        const fraseActual = [...frases].reverse().find(f => porcentaje >= f.p);
-        document.getElementById('fraseMotivadora').textContent = fraseActual.t;
-    }
 
     function renderMalla() {
         const grid = document.getElementById('mallaGrid');
@@ -265,10 +233,10 @@
         mallaData.forEach(anio => {
             const card = document.createElement('div');
             card.className = 'anio-card';
-            card.innerHTML = `<div class="anio-titulo">${anio.anio}</div>`;
+            card.innerHTML = `<div style="font-size:1.5rem; font-weight:bold; color:var(--verde-oscuro); margin-bottom:15px;">${anio.anio}</div>`;
             
             anio.semestres.forEach(sem => {
-                card.innerHTML += `<div class="semestre-label">${sem.nombre}</div>`;
+                card.innerHTML += `<div style="background:#f0f4eb; font-size:0.8rem; font-weight:bold; padding:8px; border-radius:10px; margin-top:15px;">${sem.nombre}</div>`;
                 sem.materias.forEach(m => {
                     total++;
                     const esAprobada = aprobadas[m.nombre];
@@ -279,17 +247,18 @@
                     mDiv.className = `materia ${esAprobada ? 'aprobada' : ''} ${bloqueada && !esAprobada ? 'bloqueada' : ''}`;
                     mDiv.textContent = m.nombre;
 
-                    // TOOLTIPS Y EMOJIS (TUS MENSAJITOS)
+                    // TOOLTIPS Y EMOJIS
                     if (bloqueada && !esAprobada) {
                         const faltan = m.prereq.filter(p => !aprobadas[p]);
                         mDiv.setAttribute('data-tooltip', `🔒 Faltan: ${faltan.join(", ")}`);
                     } else if (esAprobada) {
-                        mDiv.setAttribute('data-tooltip', `✅ Completada`);
+                        mDiv.setAttribute('data-tooltip', `✅ ¡Completada!`);
                     } else {
                         mDiv.setAttribute('data-tooltip', `🔓 Lista para cursar`);
                     }
 
                     mDiv.onclick = (e) => {
+                        e.preventDefault();
                         e.stopPropagation();
                         if(!bloqueada || esAprobada) toggleMateria(m.nombre);
                     };
@@ -302,7 +271,9 @@
         const porc = Math.round((numAp/total)*100) || 0;
         document.getElementById('fillProgreso').style.width = porc + '%';
         document.getElementById('txtProgreso').textContent = `Avance: ${porc}%`;
-        actualizarFrase(porc);
+        
+        const frases = ["¡Empecemos este diseño! 🌱", "¡Vas muy bien! ✨", "¡A mitad del camino! 🏛️", "¡Casi arquitecta! 🎓"];
+        document.getElementById('fraseMotivadora').textContent = frases[Math.floor(porc/30)] || frases[3];
     }
 
     async function toggleMateria(n) {
@@ -313,23 +284,19 @@
     document.getElementById('googleBtn').onclick = () => signInWithPopup(auth, provider);
     document.getElementById('logoutBtn').onclick = () => signOut(auth);
     document.getElementById('reiniciarBtn').onclick = async () => {
-        if(confirm("¿Segura que quieres borrar tu progreso? ✨"))
-            await setDoc(doc(db, "usuarios", usuarioActual.uid), { materias: {} });
+        if(confirm("¿Borrar todo el progreso?")) await setDoc(doc(db, "usuarios", usuarioActual.uid), { materias: {} });
     };
 
-    // FUNCIÓN PDF
     document.getElementById('pdfBtn').onclick = () => {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.setFontSize(20);
-        doc.setTextColor(107, 142, 35);
-        doc.text("Mi Avance de Carrera - Arquitectura", 20, 20);
+        doc.text("Mi Avance de Arquitectura", 20, 20);
         const lista = [];
         mallaData.forEach(anio => anio.semestres.forEach(sem => sem.materias.forEach(m => {
             lista.push([anio.anio, sem.nombre, m.nombre, aprobadas[m.nombre] ? "Aprobada" : "Pendiente"]);
         })));
-        doc.autoTable({ head: [['Año', 'Semestre', 'Materia', 'Estado']], body: lista, startY: 30, headStyles: { fillColor: [163, 197, 133] } });
-        doc.save("Mi_Malla_Arquitectura.pdf");
+        doc.autoTable({ head: [['Año', 'Semestre', 'Materia', 'Estado']], body: lista, startY: 30 });
+        doc.save("Mi_Malla.pdf");
     };
 </script>
 </body>
