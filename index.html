@@ -100,24 +100,16 @@ input {width:90%; padding:8px; border-radius:8px; border:1px solid #ccc; margin-
   <div class="malla" id="malla"></div>
 </div>
 
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyDGFEsBWnEHP3luKaeaFzUe_Nguqz3j_pA",
-    authDomain: "malla-curricular-arquitectura.firebaseapp.com",
-    projectId: "malla-curricular-arquitectura",
-    storageBucket: "malla-curricular-arquitectura.firebasestorage.app",
-    messagingSenderId: "613677284410",
-    appId: "1:613677284410:web:9ac0d5248cd643af378903",
-    measurementId: "G-7LZDWT3DM7"
-  };
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDGFEsBWnEHP3luKaeaFzUe_Nguqz3j_pA",
+  authDomain: "malla-curricular-arquitectura.firebaseapp.com",
+  projectId: "malla-curricular-arquitectura",
+  storageBucket: "malla-curricular-arquitectura.appspot.com",
+  messagingSenderId: "613677284410",
+  appId: "1:613677284410:web:9ac0d5248cd643af378903",
+  measurementId: "G-7LZDWT3DM7"
+};
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
@@ -144,7 +136,6 @@ googleBtn.onclick = async()=>{try{await signInWithPopup(auth,new GoogleAuthProvi
 recoverBtn.onclick = async()=>{try{await sendPasswordResetEmail(auth,email.value); alert("Correo enviado");}catch(e){alert(e.message);}}
 logoutBtn.onclick = ()=>signOut(auth);
 
-/* Malla de ejemplo (simplificada, reemplaza con tu data completa) */
 const mallaData = [
   /* ---------- PRIMER AÑO ---------- */
   {
