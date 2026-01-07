@@ -26,7 +26,6 @@
             background-size: 20px 20px;
         }
 
-        /* --- LOGIN SCREEN (Única vista al inicio) --- */
         #loginScreen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -52,7 +51,6 @@
             margin-bottom: 30px;
         }
 
-        /* --- CONTENIDO PRINCIPAL (Oculto hasta el login) --- */
         #mainContent { 
             display: none; 
             padding: 20px; 
@@ -73,7 +71,6 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* Barra de Progreso */
         .progreso-container { margin: 20px auto 40px; max-width: 800px; }
         .barra-bg {
             width: 100%; height: 16px; background-color: #e2ecd7;
@@ -90,7 +87,6 @@
             color: #88a070; min-height: 1.2em;
         }
 
-        /* Malla Cards */
         .malla-scroll { display: flex; gap: 30px; overflow-x: auto; padding: 30px; scrollbar-width: none; }
         .anio-card { 
             min-width: 300px; background: rgba(255, 255, 255, 0.6); 
@@ -117,7 +113,6 @@
         .materia.aprobada { background-color: var(--verde-primario) !important; color: white; }
         .materia.bloqueada { color: #bcc7b0; background: #fdfdfd; cursor: not-allowed; }
 
-        /* Tooltip */
         .materia::after {
             content: attr(data-tooltip);
             position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
@@ -126,10 +121,11 @@
         }
         .materia:hover::after { opacity: 1; visibility: visible; }
 
-        /* CONTROLES FLOTANTES */
+        /* --- CORRECCIÓN DE CLICS AQUÍ --- */
         .controles-flotantes {
             position: fixed; bottom: 30px; right: 30px;
             display: flex; flex-direction: column; gap: 15px; z-index: 3000;
+            pointer-events: none; /* Esto permite hacer clic a través del contenedor */
         }
 
         .btn-float {
@@ -137,6 +133,7 @@
             background: var(--verde-primario); color: white; font-size: 1.5rem;
             cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             display: flex; align-items: center; justify-content: center; transition: 0.3s;
+            pointer-events: auto; /* Esto hace que los botones sí sean clicables */
         }
         .btn-float:hover { transform: scale(1.1) rotate(5deg); background: var(--verde-oscuro); }
         
@@ -413,7 +410,7 @@
             { p: 50, t: "¡Mitad de carrera! Ya eres casi una experta 🏛️" },
             { p: 100, t: "¡Felicidades, Arquitecta! El mundo es tu lienzo 🎓" }
         ];
-        const fraseActual = frases.reverse().find(f => porcentaje >= f.p);
+        const fraseActual = [...frases].reverse().find(f => porcentaje >= f.p);
         document.getElementById('fraseMotivadora').textContent = fraseActual.t;
     }
 
@@ -471,6 +468,35 @@
     document.getElementById('reiniciarBtn').onclick = async () => {
         if(confirm("¿Segura que quieres borrar tu progreso? ✨"))
             await setDoc(doc(db, "usuarios", usuarioActual.uid), { materias: {} });
+    };
+
+    // --- FUNCIÓN DEL PDF ---
+    document.getElementById('pdfBtn').onclick = () => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.setFontSize(20);
+        doc.setTextColor(107, 142, 35);
+        doc.text("Mi Avance de Carrera - Arquitectura", 20, 20);
+        
+        const lista = [];
+        mallaData.forEach(anio => {
+            anio.semestres.forEach(sem => {
+                sem.materias.forEach(m => {
+                    const estado = aprobadas[m.nombre] ? "Aprobada" : "Pendiente";
+                    lista.push([anio.anio, sem.nombre, m.nombre, estado]);
+                });
+            });
+        });
+
+        doc.autoTable({
+            startY: 30,
+            head: [['Año', 'Semestre', 'Materia', 'Estado']],
+            body: lista,
+            headStyles: { fillColor: [163, 197, 133] }
+        });
+
+        doc.save("Mi_Malla_Arquitectura.pdf");
     };
 </script>
 </body>
