@@ -3,137 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Malla Curricular Arquitectura - Cloud Sync</title>
+    <title>Malla Curricular Arquitectura ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    
     <style>
         :root {
+            --verde-fondo: #f4f7f0;
+            --verde-fuente: #4c662b;
+            --verde-primario: #a3c585;
             --verde-oscuro: #6b8e23;
-            --verde-medio: #8fb04d;
-            --verde-claro: #e2ecd7;
-            --fondo: #f8f9f3;
-            --google-blue: #4285F4;
+            --blanco: #ffffff;
         }
 
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--fondo); 
-            margin: 0; 
-            padding: 10px; 
-            color: #333; 
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: var(--verde-fondo);
+            margin: 0;
+            color: var(--verde-fuente);
+            background-image: radial-gradient(#dce6d1 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
         }
-        
-        h1 { text-align: center; color: #4a611a; text-transform: uppercase; letter-spacing: 2px; font-size: 1.5rem; margin-top: 20px; }
 
-        /* --- Contenedores de Autenticación --- */
-        .auth-container { 
-            max-width: 400px; 
-            margin: 0 auto 20px; 
+        /* --- LOGIN SCREEN (Única vista al inicio) --- */
+        #loginScreen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--verde-fondo);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000;
+        }
+
+        .login-card {
+            background: var(--blanco);
+            padding: 50px;
+            border-radius: 40px;
+            box-shadow: 0 15px 35px rgba(107, 142, 35, 0.1);
+            text-align: center;
+            width: 320px;
+            border: 1px solid rgba(163, 197, 133, 0.3);
+        }
+
+        .login-card h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: var(--verde-oscuro);
+            margin-bottom: 30px;
+        }
+
+        /* --- CONTENIDO PRINCIPAL (Oculto hasta el login) --- */
+        #mainContent { 
+            display: none; 
             padding: 20px; 
-            background: white; 
-            border-radius: 15px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
             text-align: center; 
+            animation: fadeIn 0.8s ease-in-out;
         }
-        input { width: 85%; padding: 10px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; outline: none; }
-        
-        /* Botón de Google */
-        .btn-google {
-            background-color: white;
-            color: #757575;
-            border: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 92%;
-            margin: 10px auto;
-            font-family: 'Roboto', sans-serif;
-            font-weight: 500;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .btn-google img { width: 18px; }
-        .btn-google:hover { background-color: #f1f1f1; border-color: #ccc; }
 
-        /* --- Barra de Progreso --- */
-        .progreso-container { width: 90%; max-width: 800px; margin: 0 auto 30px; text-align: center; }
-        .porcentaje-texto { font-weight: bold; margin-bottom: 10px; color: #555; font-size: 1.1em; }
-        .progreso-bar { width: 100%; background-color: var(--verde-claro); border-radius: 20px; height: 16px; overflow: hidden; margin-bottom: 10px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
-        .progreso-fill { height: 100%; width: 0%; background-color: var(--verde-medio); transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-        #mensajeMotivacion { font-style: italic; color: #666; font-size: 0.95em; margin-bottom: 15px; min-height: 1.2em; }
-
-        /* --- Botones --- */
-        button { background-color: var(--verde-oscuro); color: white; border: none; border-radius: 20px; padding: 10px 20px; cursor: pointer; font-weight: bold; transition: 0.3s; margin: 5px; }
-        button:hover { background-color: #4a611a; transform: translateY(-1px); }
-        .btn-outline { background: transparent; color: var(--verde-oscuro); border: 1px solid var(--verde-oscuro); }
-        #reiniciarBtn { background-color: #9eb17a; font-size: 0.85em; padding: 6px 15px; }
-
-        /* --- Malla Estilo Tarjetas --- */
-        .malla { display: flex; gap: 20px; overflow-x: auto; padding: 20px; scrollbar-width: thin; }
-        .anio { min-width: 280px; background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex-shrink: 0; }
-        .anio h2 { text-align: center; color: #4a611a; border-bottom: 2px solid var(--verde-claro); padding-bottom: 10px; font-size: 1.2rem; }
-        .semestre h3 { text-align: center; font-size: 0.85em; color: #888; margin-top: 20px; text-transform: uppercase; background: #f9fbf7; padding: 5px; border-radius: 5px; }
-
-        /* --- Materias y Tooltips --- */
-        .materia { 
-            background: white; border: 1px solid #eee; margin: 8px 0; padding: 12px; border-radius: 10px; 
-            cursor: pointer; text-align: center; font-size: 0.85em; position: relative; transition: 0.2s;
-            display: flex; align-items: center; justify-content: center; min-height: 40px;
+        .titulo-malla {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            margin: 40px 0 10px;
+            color: var(--verde-oscuro);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
         }
-        .materia:hover { border-color: var(--verde-medio); background-color: #fafafa; }
-        .materia.aprobada { background: var(--verde-medio) !important; color: white; border-color: var(--verde-oscuro); text-decoration: line-through; }
-        .materia.bloqueada { background: #fdfdfd; color: #bbb; cursor: not-allowed; }
+
+        /* Barra de Progreso */
+        .progreso-container { margin: 20px auto 40px; max-width: 800px; }
+        .barra-bg {
+            width: 100%; height: 16px; background-color: #e2ecd7;
+            border-radius: 50px; overflow: hidden; margin: 15px 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+        }
+        .barra-fill { 
+            height: 100%; background: linear-gradient(90deg, var(--verde-primario), #b8d59a); 
+            width: 0%; transition: width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+
+        .frase-motivadora {
+            font-style: italic; font-weight: 300; margin-bottom: 20px;
+            color: #88a070; min-height: 1.2em;
+        }
+
+        /* Malla Cards */
+        .malla-scroll { display: flex; gap: 30px; overflow-x: auto; padding: 30px; scrollbar-width: none; }
+        .anio-card { 
+            min-width: 300px; background: rgba(255, 255, 255, 0.6); 
+            border-radius: 35px; padding: 25px; 
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.8);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+        }
+
+        .anio-titulo { 
+            font-size: 1.8rem; font-weight: 700; color: var(--verde-oscuro);
+            border-bottom: 2px solid #dce6d1; padding-bottom: 10px; margin-bottom: 20px;
+        }
+
+        .semestre-label { 
+            background: #f0f4eb; padding: 10px; border-radius: 15px; 
+            font-size: 0.9rem; font-weight: 700; margin: 20px 0 10px;
+        }
+
+        .materia {
+            background: var(--blanco); padding: 14px; margin: 10px 0; border-radius: 18px;
+            font-size: 0.85rem; cursor: pointer; position: relative; transition: 0.3s;
+        }
+        .materia.aprobada { background-color: var(--verde-primario) !important; color: white; }
+        .materia.bloqueada { color: #bcc7b0; background: #fdfdfd; cursor: not-allowed; }
 
         /* Tooltip */
         .materia::after {
             content: attr(data-tooltip);
-            position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%);
-            background: rgba(40, 40, 40, 0.9); color: white; padding: 8px 12px; border-radius: 6px;
-            font-size: 0.75rem; width: 180px; z-index: 100; opacity: 0; visibility: hidden; transition: 0.2s; pointer-events: none;
+            position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
+            background: rgba(76, 102, 43, 0.9); color: white; padding: 10px 15px; border-radius: 15px;
+            font-size: 0.75rem; width: 180px; z-index: 100; opacity: 0; visibility: hidden; transition: 0.3s;
         }
         .materia:hover::after { opacity: 1; visibility: visible; }
 
-        @media (max-width: 768px) {
-            .malla { flex-direction: column; align-items: center; }
-            .anio { width: 90%; min-width: auto; }
+        /* CONTROLES FLOTANTES */
+        .controles-flotantes {
+            position: fixed; bottom: 30px; right: 30px;
+            display: flex; flex-direction: column; gap: 15px; z-index: 3000;
+        }
+
+        .btn-float {
+            width: 60px; height: 60px; border-radius: 50%; border: none;
+            background: var(--verde-primario); color: white; font-size: 1.5rem;
+            cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            display: flex; align-items: center; justify-content: center; transition: 0.3s;
+        }
+        .btn-float:hover { transform: scale(1.1) rotate(5deg); background: var(--verde-oscuro); }
+        
+        .btn-float::before {
+            content: attr(data-label); position: absolute; right: 75px;
+            background: rgba(0,0,0,0.7); color: white; padding: 6px 12px;
+            border-radius: 8px; font-size: 0.75rem; white-space: nowrap;
+            opacity: 0; transition: 0.3s; pointer-events: none;
+        }
+        .btn-float:hover::before { opacity: 1; }
+
+        .btn-google { 
+            background: white; border: 1px solid #eee; padding: 14px; border-radius: 50px; 
+            width: 100%; cursor: pointer; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
     </style>
 </head>
 <body>
 
-    <h1>Malla Arquitectura</h1>
+    <div id="loginScreen">
+        <div class="login-card">
+            <h1>Bienvenida ✨</h1>
+            <p style="color: #88a070; margin-bottom: 20px;">Tu futuro diseño comienza aquí</p>
+            <button id="googleBtn" class="btn-google">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="18"> Entrar con Google
+            </button>
+        </div>
+    </div>
 
-    <div id="authBox" class="auth-container">
-        <p>Inicia sesión para sincronizar tus dispositivos</p>
+    <div id="mainContent">
+        <h1 class="titulo-malla">Malla Curricular Arquitectura</h1>
         
-        <button id="googleLoginBtn" class="btn-google">
-            <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="Google Logo">
-            Continuar con Google
-        </button>
+        <div class="progreso-container">
+            <p id="txtProgreso" style="font-weight: 700; margin-bottom: 5px;">Avance: 0%</p>
+            <div class="barra-bg"><div id="fillProgreso" class="barra-fill"></div></div>
+            <p id="fraseMotivadora" class="frase-motivadora"></p>
+            <button id="reiniciarBtn" style="background: none; border: none; color: #aaa; cursor: pointer; font-size: 0.7rem; text-decoration: underline;">Reiniciar mi progreso</button>
+        </div>
 
-        <p style="font-size: 0.8em; color: #999; margin: 15px 0;">— O usa tu correo —</p>
-        
-        <input id="email" type="email" placeholder="Correo electrónico">
-        <input id="pass" type="password" placeholder="Contraseña">
-        <br>
-        <button id="loginBtn">Entrar</button>
-        <button id="registerBtn" class="btn-outline">Crear Cuenta</button>
+        <div class="malla-scroll" id="mallaGrid"></div>
+
+        <div class="controles-flotantes">
+            <button id="pdfBtn" class="btn-float" data-label="Descargar PDF">📄</button>
+            <button id="logoutBtn" class="btn-float" data-label="Cerrar Sesión" style="background:#d1d9c7; color:#4c662b; font-size: 1.1rem;">✕</button>
+        </div>
     </div>
-
-    <div id="userBox" class="auth-container" style="display:none;">
-        <p>Bienvenido: <span id="userEmail" style="font-weight:bold;"></span></p>
-        <button id="logoutBtn" class="btn-outline">Cerrar Sesión</button>
-    </div>
-
-    <div class="progreso-container">
-        <p class="porcentaje-texto" id="porcentajeProgreso">Progreso: 0%</p>
-        <div class="progreso-bar"><div class="progreso-fill" id="progresoFill"></div></div>
-        <div id="mensajeMotivacion">Todo gran proyecto empieza con una idea 🌱</div>
-        <button id="reiniciarBtn">Reiniciar progreso</button>
-    </div>
-
-    <div class="malla" id="mallaContainer"></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -148,22 +201,12 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const googleProvider = new GoogleAuthProvider();
+    const provider = new GoogleAuthProvider();
 
     let usuarioActual = null;
-    let aprobadas = {}; 
+    let aprobadas = {};
 
-    // Mensajes motivacionales
-    const frasesMotivacionales = [
-        { min: 0, msg: "Todo gran proyecto empieza con una idea 🌱" },
-        { min: 15, msg: "Poniendo los primeros cimientos 🏗️" },
-        { min: 40, msg: "Diseñando tu futuro, paso a paso 📐" },
-        { min: 60, msg: "¡Mitad de carrera superada! Vas por buen camino 🏛️" },
-        { min: 85, msg: "La estructura está sólida, falta muy poco 🎨" },
-        { min: 100, msg: "¡Felicidades Arquitecto/a! Proyecto completado 🌟" }
-    ];
-
-   const mallaData = [
+    const mallaData = [
   /* ---------- PRIMER AÑO ---------- */
   {
     anio: "AÑO 1",
@@ -347,74 +390,55 @@
     ]
   }
 ];
-    // --- Lógica de Autenticación ---
-    document.getElementById('googleLoginBtn').onclick = () => {
-        signInWithPopup(auth, googleProvider).catch(err => alert("Error Google: " + err.message));
-    };
-
-    document.getElementById('registerBtn').onclick = () => {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('pass').value;
-        createUserWithEmailAndPassword(auth, email, pass).catch(err => alert("Error: " + err.message));
-    };
-
-    document.getElementById('loginBtn').onclick = () => {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('pass').value;
-        signInWithEmailAndPassword(auth, email, pass).catch(err => alert("Error de acceso"));
-    };
-
-    document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
             usuarioActual = user;
-            document.getElementById('authBox').style.display = 'none';
-            document.getElementById('userBox').style.display = 'block';
-            document.getElementById('userEmail').textContent = user.email;
-            onSnapshot(doc(db, "usuarios", user.uid), (docSnap) => {
-                aprobadas = docSnap.exists() ? docSnap.data().materias : {};
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            onSnapshot(doc(db, "usuarios", user.uid), (snap) => {
+                aprobadas = snap.exists() ? snap.data().materias : {};
                 renderMalla();
             });
         } else {
-            usuarioActual = null;
-            aprobadas = {};
-            document.getElementById('authBox').style.display = 'block';
-            document.getElementById('userBox').style.display = 'none';
-            renderMalla();
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainContent').style.display = 'none';
         }
     });
 
-    async function toggleMateria(nombre) {
-        if (!usuarioActual) { alert("¡Inicia sesión para sincronizar!"); return; }
-        if (aprobadas[nombre]) { delete aprobadas[nombre]; } else { aprobadas[nombre] = true; }
-        await setDoc(doc(db, "usuarios", usuarioActual.uid), { materias: aprobadas });
+    function actualizarFrase(porcentaje) {
+        const frases = [
+            { p: 0, t: "Todo gran proyecto empieza con una idea 🌱" },
+            { p: 10, t: "¡Buen comienzo! Tus primeros trazos están listos ✨" },
+            { p: 50, t: "¡Mitad de carrera! Ya eres casi una experta 🏛️" },
+            { p: 100, t: "¡Felicidades, Arquitecta! El mundo es tu lienzo 🎓" }
+        ];
+        const fraseActual = frases.reverse().find(f => porcentaje >= f.p);
+        document.getElementById('fraseMotivadora').textContent = fraseActual.t;
     }
 
     function renderMalla() {
-        const container = document.getElementById('mallaContainer');
-        container.innerHTML = '';
-        let totalMat = 0, aprobadasCount = 0;
+        const grid = document.getElementById('mallaGrid');
+        grid.innerHTML = '';
+        let total = 0, numAp = 0;
 
         mallaData.forEach(anio => {
-            const anioDiv = document.createElement('div');
-            anioDiv.className = 'anio';
-            anioDiv.innerHTML = `<h2>${anio.anio}</h2>`;
+            const card = document.createElement('div');
+            card.className = 'anio-card';
+            card.innerHTML = `<div class="anio-titulo">${anio.anio}</div>`;
+            
             anio.semestres.forEach(sem => {
-                const semDiv = document.createElement('div');
-                semDiv.className = 'semestre';
-                semDiv.innerHTML = `<h3>${sem.nombre}</h3>`;
+                card.innerHTML += `<div class="semestre-label">${sem.nombre}</div>`;
                 sem.materias.forEach(m => {
-                    totalMat++;
+                    total++;
                     const esAprobada = aprobadas[m.nombre];
-                    if(esAprobada) aprobadasCount++;
+                    if(esAprobada) numAp++;
                     const bloqueada = !m.prereq.every(p => aprobadas[p]);
-                    
+
                     const mDiv = document.createElement('div');
                     mDiv.className = `materia ${esAprobada ? 'aprobada' : ''} ${bloqueada && !esAprobada ? 'bloqueada' : ''}`;
                     mDiv.textContent = m.nombre;
 
-                    // Tooltip dinámico
                     if (bloqueada && !esAprobada) {
                         const faltan = m.prereq.filter(p => !aprobadas[p]);
                         mDiv.setAttribute('data-tooltip', `🔒 Faltan: ${faltan.join(", ")}`);
@@ -424,27 +448,30 @@
                         mDiv.setAttribute('data-tooltip', `🔓 Lista para cursar`);
                     }
 
-                    mDiv.onclick = () => { if (!bloqueada || esAprobada) toggleMateria(m.nombre); };
-                    semDiv.appendChild(mDiv);
+                    mDiv.onclick = () => { if(!bloqueada || esAprobada) toggleMateria(m.nombre); };
+                    card.appendChild(mDiv);
                 });
-                anioDiv.appendChild(semDiv);
             });
-            container.appendChild(anioDiv);
+            grid.appendChild(card);
         });
 
-        const porc = Math.round((aprobadasCount / totalMat) * 100) || 0;
-        document.getElementById('progresoFill').style.width = porc + '%';
-        document.getElementById('porcentajeProgreso').textContent = `Progreso: ${porc}%`;
-        
-        const frase = [...frasesMotivacionales].reverse().find(f => porc >= f.min);
-        document.getElementById('mensajeMotivacion').textContent = frase ? frase.msg : frasesMotivacionales[0].msg;
+        const porc = Math.round((numAp/total)*100) || 0;
+        document.getElementById('fillProgreso').style.width = porc + '%';
+        document.getElementById('txtProgreso').textContent = `Avance: ${porc}%`;
+        actualizarFrase(porc);
     }
 
-    document.getElementById('reiniciarBtn').onclick = async () => {
-        if(usuarioActual && confirm("¿Deseas reiniciar todo tu progreso en la nube?")) {
-            await setDoc(doc(db, "usuarios", usuarioActual.uid), { materias: {} });
-        }
+    async function toggleMateria(n) {
+        aprobadas[n] ? delete aprobadas[n] : aprobadas[n] = true;
+        await setDoc(doc(db, "usuarios", usuarioActual.uid), { materias: aprobadas });
     }
+
+    document.getElementById('googleBtn').onclick = () => signInWithPopup(auth, provider);
+    document.getElementById('logoutBtn').onclick = () => signOut(auth);
+    document.getElementById('reiniciarBtn').onclick = async () => {
+        if(confirm("¿Segura que quieres borrar tu progreso? ✨"))
+            await setDoc(doc(db, "usuarios", usuarioActual.uid), { materias: {} });
+    };
 </script>
 </body>
 </html>
