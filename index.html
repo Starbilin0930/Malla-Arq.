@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Malla Curricular Arquitectura</title>
+
 <style>
 body {
   font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
@@ -12,104 +13,235 @@ body {
   padding: 20px;
   color: #333;
 }
-h1 {text-align:center;color:#6b8e23;margin-bottom:10px;}
+
+h1 {
+  text-align: center;
+  color: #6b8e23;
+  margin-bottom: 10px;
+}
 
 /* Barra de progreso */
 .progreso-container {
-  width: 90%; max-width:900px; margin:0 auto 15px; text-align:center;
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto 15px;
+  text-align: center;
 }
-.progreso-bar {width:100%; background:#e2ecd7; border-radius:12px; overflow:hidden; height:20px; margin-bottom:5px;}
+
+.progreso-bar {
+  width: 100%;
+  background-color: #e2ecd7;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 20px;
+  margin-bottom: 5px;
+}
+
 .progreso-fill {
-  height:100%; width:0%; background:#556b2f; transition: width 0.5s ease;
+  height: 100%;
+  width: 0%;
+  background-color: #556b2f;
+  transition: width 0.5s ease;
 }
-.mensaje-motivacion {font-size:0.95em; color:#556b2f; margin-bottom:10px;}
+
+.mensaje-motivacion {
+  font-size: 0.95em;
+  color: #556b2f;
+  margin-bottom: 10px;
+}
+
 button {
-  background:#6b8e23; color:white; border:none; border-radius:10px;
-  padding:8px 16px; cursor:pointer; margin-bottom:20px; transition:0.3s;
+  background-color: #6b8e23;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: 0.2s;
 }
-button:hover {background:#556b2f;}
+
+button:hover {
+  background-color: #556b2f;
+}
 
 /* Login Box */
 #authBox, #userBox{
-  max-width:450px; margin:0 auto 20px; padding:15px; border-radius:12px;
-  background:#eef5e6; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  max-width: 450px;
+  margin: 0 auto 20px;
+  padding: 15px;
+  border-radius: 12px;
+  background:#eef5e6;
+  text-align:center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
-input {width:90%; padding:8px; border-radius:8px; border:1px solid #ccc; margin-bottom:10px;}
+
+input{
+  width:90%;
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  margin-bottom:10px;
+}
 
 /* AÑOS */
-.anio {min-width:220px;background:#e8f0e2;border-radius:12px;padding:15px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
-.anio h2 {text-align:center;color:#556b2f;margin-bottom:10px;font-weight:bold;font-size:1.1em;border-bottom:1px solid #a0b78e;width:80%;padding-bottom:5px;}
+.anio {
+  min-width: 220px;
+  background:#e8f0e2;
+  border-radius:12px;
+  padding:15px;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+
+.anio h2 {
+  text-align:center;
+  color:#556b2f;
+  margin-bottom:10px;
+  font-weight:bold;
+  font-size:1.1em;
+  border-bottom:1px solid #a0b78e;
+  width:80%;
+  padding-bottom:5px;
+}
 
 /* SEMESTRES */
-.semestre {display:flex;flex-direction:column;align-items:center;background:#f0f6ed;border-radius:12px;padding:8px;margin-bottom:15px;width:90%;box-shadow:inset 0 0 3px rgba(0,0,0,0.05);}
-.semestre h3 {text-align:center;font-size:1em;margin-bottom:8px;font-weight:bold;background:#d8e3c7;padding:4px 0;border-radius:8px;width:100%;}
+.semestre {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  background:#f0f6ed;
+  border-radius:12px;
+  padding:8px;
+  margin-bottom:15px;
+  width:90%;
+  box-shadow:inset 0 0 3px rgba(0,0,0,0.05);
+}
+
+.semestre h3 {
+  text-align:center;
+  font-size:1em;
+  margin-bottom:8px;
+  font-weight:bold;
+  background:#d8e3c7;
+  padding:4px 0;
+  border-radius:8px;
+  width:100%;
+}
 
 /* MATERIAS */
 .materia {
-  background:#d8e3c7; margin:4px 0; padding:6px; border-radius:8px;
-  cursor:pointer; transition: all 0.3s ease; text-align:center; width:95%;
-  transform: scale(1);
+  background:#d8e3c7;
+  margin:4px 0;
+  padding:6px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:.3s;
+  text-align:center;
+  width:95%;
 }
+
 .materia.aprobada {
-  background:#556b2f; color:white; text-decoration:line-through;
+  background:#556b2f;
+  color:white;
+  text-decoration:line-through;
   transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
-.materia.bloqueada {background:#cfcfcf; cursor:not-allowed; opacity:.7; transform: scale(1);}
+
+.materia.bloqueada {
+  background:#cfcfcf;
+  cursor:not-allowed;
+  opacity:.7;
+}
+
+/* Tooltip */
 .materia[data-tooltip]:hover::after {
-  content:attr(data-tooltip); position:absolute; top:-30px; left:50%; transform:translateX(-50%);
-  background:#556b2f; color:white; padding:5px 8px; border-radius:6px; font-size:.8em;
+  content:attr(data-tooltip);
+  position:absolute;
+  top:-30px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#556b2f;
+  color:white;
+  padding:5px 8px;
+  border-radius:6px;
+  font-size:.8em;
 }
+
 .materia[data-tooltip]:hover::before {
-  content:''; position:absolute; top:-10px; left:50%; transform:translateX(-50%);
-  border-width:5px; border-style:solid; border-color:#556b2f transparent transparent transparent;
+  content:'';
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  border-width:5px;
+  border-style:solid;
+  border-color:#556b2f transparent transparent transparent;
 }
 
 /* MALLA */
-.malla {display:flex;gap:20px;overflow-x:auto;padding:20px;scroll-behavior:smooth;}
+.malla {
+  display:flex;
+  gap:20px;
+  overflow-x:auto;
+  padding:20px;
+  scroll-behavior:smooth;
+}
 </style>
 </head>
 <body>
 
 <h1>MALLA CURRICULAR ARQUITECTURA</h1>
 
-<!-- Login -->
+<!-- Caja de Autenticación -->
 <div id="authBox">
   <h3>Inicia sesión para guardar tu progreso</h3>
   <input id="email" type="email" placeholder="Correo">
   <input id="pass" type="password" placeholder="Contraseña">
+
   <button id="loginBtn">Ingresar</button>
   <button id="registerBtn">Crear cuenta</button>
   <button id="googleBtn">Continuar con Google</button>
   <button id="recoverBtn">Recuperar contraseña</button>
 </div>
 
+<!-- Caja cuando el usuario está logueado -->
 <div id="userBox" style="display:none;">
   <p>Sesión iniciada como: <strong id="userEmail"></strong></p>
   <button id="logoutBtn">Cerrar sesión</button>
 </div>
 
-<!-- Contenido protegido -->
-<div id="appContent" style="display:none;">
-  <div class="progreso-container">
-    <div class="progreso-bar"><div class="progreso-fill" id="progresoFill"></div></div>
-    <div id="porcentajeProgreso">Progreso: 0%</div>
-    <div class="mensaje-motivacion" id="mensajeMotivacion">Todo gran proyecto empieza con una idea 🌱</div>
-    <button id="reiniciarBtn">Reiniciar progreso</button>
+<!-- Barra de progreso -->
+<div class="progreso-container">
+  <div class="progreso-bar">
+    <div class="progreso-fill" id="progresoFill"></div>
   </div>
-  <div class="malla" id="malla"></div>
+  <div id="porcentajeProgreso">Progreso: 0%</div>
+  <div class="mensaje-motivacion" id="mensajeMotivacion">Todo gran proyecto empieza con una idea 🌱</div>
 </div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
-         GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail,
-         onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+<div class="malla" id="malla"></div>
 
-/* Config Firebase */
+<!-- ================== FIREBASE + MALLA ================== -->
+<script type="module">
+// ---------------- FIREBASE ----------------
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { 
+  getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+  GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail,
+  onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+import { 
+  getFirestore, doc, setDoc, onSnapshot 
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+// Config Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyDGFEsBWnEHP3luKaeaFzUe_Nguqz3j_pA",
+  apiKey: "AIzaSyDGFEsBWnEHP3luKaeaFzUe_NGuqz3j_pA",
   authDomain: "malla-curricular-arquitectura.firebaseapp.com",
   projectId: "malla-curricular-arquitectura",
   storageBucket: "malla-curricular-arquitectura.appspot.com",
@@ -121,7 +253,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-/* Referencias UI */
+// Referencias HTML
 const email = document.getElementById("email");
 const pass = document.getElementById("pass");
 const loginBtn = document.getElementById("loginBtn");
@@ -132,113 +264,128 @@ const logoutBtn = document.getElementById("logoutBtn");
 const authBox = document.getElementById("authBox");
 const userBox = document.getElementById("userBox");
 const userEmail = document.getElementById("userEmail");
-const appContent = document.getElementById("appContent");
+const mallaEl = document.getElementById("malla");
+const progresoFill = document.getElementById("progresoFill");
+const porcentajeProgreso = document.getElementById("porcentajeProgreso");
+const mensajeMotivacion = document.getElementById("mensajeMotivacion");
 
-/* Login y registro */
-loginBtn.onclick = async()=>{try{await signInWithEmailAndPassword(auth,email.value,pass.value);}catch(e){alert(e.message);}}
-registerBtn.onclick = async()=>{try{await createUserWithEmailAndPassword(auth,email.value,pass.value); alert("Cuenta creada");}catch(e){alert(e.message);}}
-googleBtn.onclick = async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){alert(e.message);}}
-recoverBtn.onclick = async()=>{try{await sendPasswordResetEmail(auth,email.value); alert("Correo enviado");}catch(e){alert(e.message);}}
+// --------- LOGIN / REGISTRO ---------
+loginBtn.onclick = async ()=>{ try{
+  await signInWithEmailAndPassword(auth,email.value,pass.value);
+  alert("Inicio correcto");
+}catch(e){alert(e.message);}}
+
+registerBtn.onclick = async ()=>{ try{
+  await createUserWithEmailAndPassword(auth,email.value,pass.value);
+  alert("Cuenta creada");
+}catch(e){alert(e.message);}};
+
+googleBtn.onclick = async ()=>{ try{
+  await signInWithPopup(auth,new GoogleAuthProvider());
+}catch(e){alert(e.message);}};
+
+recoverBtn.onclick = async ()=>{ try{
+  await sendPasswordResetEmail(auth,email.value);
+  alert("Correo enviado");
+}catch(e){alert(e.message);}};
+
 logoutBtn.onclick = ()=>signOut(auth);
 
-/* Malla de ejemplo (simplificada, reemplaza con tu data completa) */
-const mallaData = [
-  {anio:"AÑO 1", semestres:[
-    {nombre:"1° SEMESTRE", materias:[
-      {nombre:"Diseño 1", prereq:[]},
-      {nombre:"Composición 1", prereq:[]}
-    ]}
-  ]}
-];
+// ---------------- MALLA DATA ----------------
+const mallaData = [ /* Pega aquí toda la data que me enviaste antes, desde AÑO 1 hasta 5 */ ];
 
-/* Variables */
-let userId = null;
-let unsubscribe = null;
-
-/* Funciones Firestore */
-async function guardarProgresoFS(nombre, aprobado){
-  if(!userId) return;
-  const userDoc = doc(db,"usuarios",userId);
-  await setDoc(userDoc,{[nombre]:aprobado},{merge:true});
+// ---------------- FUNCIONES ----------------
+async function guardarProgresoFirebase(userId, materia, aprobado){
+  await setDoc(doc(db,"usuarios",userId,"progreso",materia),{aprobada:aprobado},{merge:true});
 }
 
-/* Render malla */
-async function renderMalla(progress){
-  const malla = document.getElementById("malla");
-  malla.innerHTML="";
-  mallaData.forEach(anioData=>{
-    const anioDiv=document.createElement("div"); anioDiv.classList.add("anio");
-    const h2=document.createElement("h2"); h2.textContent=anioData.anio; anioDiv.appendChild(h2);
+function puedeAprobar(materia, progreso){
+  return materia.prereq.every(p=>progreso[p]);
+}
 
-    anioData.semestres.forEach(semestre=>{
-      const semDiv=document.createElement("div"); semDiv.classList.add("semestre");
-      const h3=document.createElement("h3"); h3.textContent=semestre.nombre; semDiv.appendChild(h3);
+function actualizarProgresoUI(progreso){
+  let total = 0, aprobadas = 0;
+  mallaData.forEach(anio=>{
+    anio.semestres.forEach(sem=>{
+      sem.materias.forEach(mat=>{
+        total++;
+        if(progreso[mat.nombre]) aprobadas++;
+      });
+    });
+  });
+  const porc = Math.round((aprobadas/total)*100);
+  porcentajeProgreso.textContent = `Progreso: ${porc}%`;
+  progresoFill.style.width = porc+"%";
 
-      semestre.materias.forEach(materia=>{
-        const matDiv=document.createElement("div"); matDiv.classList.add("materia"); matDiv.textContent=materia.nombre;
+  if(porc <= 10) mensajeMotivacion.textContent="Todo gran proyecto empieza con una idea 🌱";
+  else if(porc <=30) mensajeMotivacion.textContent="Vas construyendo tu futuro ladrillo a ladrillo 🧱";
+  else if(porc <=60) mensajeMotivacion.textContent="Sigue así, tu creatividad toma forma 🏛️";
+  else if(porc <=90) mensajeMotivacion.textContent="Casi lista/o para diseñar grandes espacios ✨";
+  else mensajeMotivacion.textContent="¡Felicidades arquitecta/o! Tu esfuerzo rindió frutos 🎉";
+}
 
-        if(progress[materia.nombre]) matDiv.classList.add("aprobada");
-        if(!materia.prereq.every(p=>progress[p]) && !progress[materia.nombre]){
+function renderMalla(userId, progreso){
+  mallaEl.innerHTML="";
+  mallaData.forEach(anio=>{
+    const anioDiv = document.createElement("div"); anioDiv.className="anio";
+    const h2 = document.createElement("h2"); h2.textContent=anio.anio; anioDiv.appendChild(h2);
+
+    anio.semestres.forEach(sem=>{
+      const semDiv = document.createElement("div"); semDiv.className="semestre";
+      const h3 = document.createElement("h3"); h3.textContent=sem.nombre; semDiv.appendChild(h3);
+
+      sem.materias.forEach(mat=>{
+        const matDiv = document.createElement("div");
+        matDiv.className="materia";
+        matDiv.textContent=mat.nombre;
+
+        if(progreso[mat.nombre]) matDiv.classList.add("aprobada");
+        if(!puedeAprobar(mat,progreso) && !progreso[mat.nombre]){
           matDiv.classList.add("bloqueada");
-          const faltantes=materia.prereq.filter(p=>!progress[p]);
-          matDiv.setAttribute("data-tooltip",`Faltan: ${faltantes.join(", ")}`);
+          const faltantes = mat.prereq.filter(p=>!progreso[p]);
+          matDiv.setAttribute("data-tooltip","Faltan: "+faltantes.join(", "));
         }
 
-        matDiv.addEventListener("click", async()=>{
-          if(!materia.prereq.every(p=>progress[p])) return;
-          const aprobado = !progress[materia.nombre];
-          await guardarProgresoFS(materia.nombre,aprobado);
-        });
+        matDiv.style.transition="all 0.3s";
+        matDiv.onclick = async ()=>{
+          if(!puedeAprobar(mat,progreso)) return;
+          progreso[mat.nombre]=!progreso[mat.nombre];
+          await guardarProgresoFirebase(userId, mat.nombre, progreso[mat.nombre]);
+        }
 
         semDiv.appendChild(matDiv);
       });
+
       anioDiv.appendChild(semDiv);
     });
-    malla.appendChild(anioDiv);
+
+    mallaEl.appendChild(anioDiv);
   });
+  actualizarProgresoUI(progreso);
+}
 
-  // Actualiza progreso
-  const aprobadas = Object.values(progress).filter(v=>v===true).length;
-  const total = mallaData.reduce((t,a)=>t+a.semestres.reduce((s,sem)=>s+sem.materias.length,0),0);
-  const porcentaje = Math.round((aprobadas/total)*100);
-  document.getElementById("porcentajeProgreso").textContent=`Progreso: ${porcentaje}%`;
-  document.getElementById("progresoFill").style.width=`${porcentaje}%`;
-});
-
-/* Botón reiniciar */
-document.getElementById("reiniciarBtn").addEventListener("click", async ()=>{
-  if(!userId) return;
-  if(confirm("¿Reiniciar progreso?")){
-    const userDoc = doc(db,"usuarios",userId);
-    await setDoc(userDoc,{}, {merge:true});
-  }
-});
-
-/* Sesión activa */
+// ---------------- SESION ----------------
 onAuthStateChanged(auth,user=>{
   if(user){
     authBox.style.display="none";
     userBox.style.display="block";
-    appContent.style.display="block";
     userEmail.textContent=user.email;
-    userId = user.uid;
 
-    // 🔥 Real-time listener para progreso
-    if(unsubscribe) unsubscribe(); // elimina listener anterior
-    const userDoc = doc(db,"usuarios",userId);
-    unsubscribe = onSnapshot(userDoc, docSnap=>{
-      const progress = docSnap.exists()? docSnap.data(): {};
-      renderMalla(progress);
+    const userProgresoRef = doc(db,"usuarios",user.uid);
+    onSnapshot(userProgresoRef, snapshot=>{
+      const progreso = snapshot.exists()?snapshot.data():{};
+      renderMalla(user.uid, progreso);
     });
 
   }else{
     authBox.style.display="block";
     userBox.style.display="none";
-    appContent.style.display="none";
-    userId=null;
-    if(unsubscribe) unsubscribe();
+    mallaEl.innerHTML="";
+    porcentajeProgreso.style.width="0%";
+    mensajeMotivacion.textContent="Todo gran proyecto empieza con una idea 🌱";
   }
 });
 </script>
+
 </body>
 </html>
