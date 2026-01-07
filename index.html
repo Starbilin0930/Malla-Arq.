@@ -3,66 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Malla Curricular Arquitectura</title>
+    <title>Malla Curricular Arquitectura - Cloud Sync</title>
     <style>
         :root {
             --verde-oscuro: #6b8e23;
             --verde-medio: #8fb04d;
             --verde-claro: #e2ecd7;
             --fondo: #f8f9f3;
-            --gris-bloqueo: #e0e0e0;
+            --google-blue: #4285F4;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--fondo); margin: 0; padding: 20px; color: #333; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--fondo); 
+            margin: 0; 
+            padding: 10px; 
+            color: #333; 
+        }
         
-        h1 { text-align: center; color: #4a611a; text-transform: uppercase; letter-spacing: 2px; }
+        h1 { text-align: center; color: #4a611a; text-transform: uppercase; letter-spacing: 2px; font-size: 1.5rem; margin-top: 20px; }
 
-        /* --- Barra de Progreso Estilo Captura --- */
-        .progreso-container { width: 80%; max-width: 800px; margin: 0 auto 30px; text-align: center; }
-        .porcentaje-texto { font-weight: bold; margin-bottom: 10px; color: #555; }
-        .progreso-bar { width: 100%; background-color: var(--verde-claro); border-radius: 20px; height: 12px; overflow: hidden; margin-bottom: 15px; }
+        /* --- Contenedores de Autenticación --- */
+        .auth-container { 
+            max-width: 400px; 
+            margin: 0 auto 20px; 
+            padding: 20px; 
+            background: white; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            text-align: center; 
+        }
+        input { width: 85%; padding: 10px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; outline: none; }
+        
+        /* Botón de Google */
+        .btn-google {
+            background-color: white;
+            color: #757575;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 92%;
+            margin: 10px auto;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+        }
+        .btn-google img { width: 18px; }
+        .btn-google:hover { background-color: #f1f1f1; border-color: #ccc; }
+
+        /* --- Barra de Progreso --- */
+        .progreso-container { width: 90%; max-width: 800px; margin: 0 auto 30px; text-align: center; }
+        .porcentaje-texto { font-weight: bold; margin-bottom: 10px; color: #555; font-size: 1.1em; }
+        .progreso-bar { width: 100%; background-color: var(--verde-claro); border-radius: 20px; height: 16px; overflow: hidden; margin-bottom: 10px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
         .progreso-fill { height: 100%; width: 0%; background-color: var(--verde-medio); transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-        #mensajeMotivacion { font-style: italic; color: #666; font-size: 0.9em; margin-bottom: 20px; min-height: 1.2em; }
+        #mensajeMotivacion { font-style: italic; color: #666; font-size: 0.95em; margin-bottom: 15px; min-height: 1.2em; }
 
-        /* --- Botón Reiniciar --- */
-        #reiniciarBtn { background-color: #9eb17a; color: white; border: none; border-radius: 20px; padding: 8px 25px; cursor: pointer; font-size: 0.9em; transition: 0.3s; }
-        #reiniciarBtn:hover { background-color: var(--verde-oscuro); }
+        /* --- Botones --- */
+        button { background-color: var(--verde-oscuro); color: white; border: none; border-radius: 20px; padding: 10px 20px; cursor: pointer; font-weight: bold; transition: 0.3s; margin: 5px; }
+        button:hover { background-color: #4a611a; transform: translateY(-1px); }
+        .btn-outline { background: transparent; color: var(--verde-oscuro); border: 1px solid var(--verde-oscuro); }
+        #reiniciarBtn { background-color: #9eb17a; font-size: 0.85em; padding: 6px 15px; }
 
         /* --- Malla Estilo Tarjetas --- */
-        .malla { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 30px; scrollbar-width: thin; }
-        .anio { min-width: 280px; background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .anio h2 { text-align: center; color: #4a611a; border-bottom: 2px solid var(--verde-claro); padding-bottom: 10px; }
-        
-        .semestre h3 { text-align: center; font-size: 1em; color: #777; margin-top: 20px; }
+        .malla { display: flex; gap: 20px; overflow-x: auto; padding: 20px; scrollbar-width: thin; }
+        .anio { min-width: 280px; background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex-shrink: 0; }
+        .anio h2 { text-align: center; color: #4a611a; border-bottom: 2px solid var(--verde-claro); padding-bottom: 10px; font-size: 1.2rem; }
+        .semestre h3 { text-align: center; font-size: 0.85em; color: #888; margin-top: 20px; text-transform: uppercase; background: #f9fbf7; padding: 5px; border-radius: 5px; }
 
         /* --- Materias y Tooltips --- */
         .materia { 
             background: white; border: 1px solid #eee; margin: 8px 0; padding: 12px; border-radius: 10px; 
             cursor: pointer; text-align: center; font-size: 0.85em; position: relative; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; min-height: 40px;
         }
+        .materia:hover { border-color: var(--verde-medio); background-color: #fafafa; }
         .materia.aprobada { background: var(--verde-medio) !important; color: white; border-color: var(--verde-oscuro); text-decoration: line-through; }
         .materia.bloqueada { background: #fdfdfd; color: #bbb; cursor: not-allowed; }
 
-        /* Tooltip dinámico */
+        /* Tooltip */
         .materia::after {
             content: attr(data-tooltip);
-            position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%);
-            background: #333; color: white; padding: 8px; border-radius: 5px;
-            font-size: 0.8em; white-space: normal; width: 180px; z-index: 10;
-            opacity: 0; visibility: hidden; transition: 0.3s; pointer-events: none;
+            position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%);
+            background: rgba(40, 40, 40, 0.9); color: white; padding: 8px 12px; border-radius: 6px;
+            font-size: 0.75rem; width: 180px; z-index: 100; opacity: 0; visibility: hidden; transition: 0.2s; pointer-events: none;
         }
         .materia:hover::after { opacity: 1; visibility: visible; }
 
-        /* Adaptación para celular (toque largo o simple) */
         @media (max-width: 768px) {
             .malla { flex-direction: column; align-items: center; }
-            .anio { width: 90%; }
+            .anio { width: 90%; min-width: auto; }
         }
     </style>
 </head>
 <body>
 
-    <h1>Malla Curricular Arquitectura</h1>
+    <h1>Malla Arquitectura</h1>
+
+    <div id="authBox" class="auth-container">
+        <p>Inicia sesión para sincronizar tus dispositivos</p>
+        
+        <button id="googleLoginBtn" class="btn-google">
+            <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="Google Logo">
+            Continuar con Google
+        </button>
+
+        <p style="font-size: 0.8em; color: #999; margin: 15px 0;">— O usa tu correo —</p>
+        
+        <input id="email" type="email" placeholder="Correo electrónico">
+        <input id="pass" type="password" placeholder="Contraseña">
+        <br>
+        <button id="loginBtn">Entrar</button>
+        <button id="registerBtn" class="btn-outline">Crear Cuenta</button>
+    </div>
+
+    <div id="userBox" class="auth-container" style="display:none;">
+        <p>Bienvenido: <span id="userEmail" style="font-weight:bold;"></span></p>
+        <button id="logoutBtn" class="btn-outline">Cerrar Sesión</button>
+    </div>
 
     <div class="progreso-container">
         <p class="porcentaje-texto" id="porcentajeProgreso">Progreso: 0%</p>
@@ -74,22 +132,263 @@
     <div class="malla" id="mallaContainer"></div>
 
 <script type="module">
-    // (Mantén aquí tu configuración de Firebase initializeApp, auth y db igual que antes)
-    // ... importaciones y firebaseConfig ...
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const mensajes = [
+    const firebaseConfig = {
+        apiKey: "AIzaSyBwu2ccI0usOv4c4SmYAKrOMSLZYGh6Mew",
+        authDomain: "malla-curricular-de-arq.firebaseapp.com",
+        projectId: "malla-curricular-de-arq",
+        storageBucket: "malla-curricular-de-arq.firebasestorage.app",
+        messagingSenderId: "922660318162",
+        appId: "1:922660318162:web:d03fc6ae04a91792e2f60b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const googleProvider = new GoogleAuthProvider();
+
+    let usuarioActual = null;
+    let aprobadas = {}; 
+
+    // Mensajes motivacionales
+    const frasesMotivacionales = [
         { min: 0, msg: "Todo gran proyecto empieza con una idea 🌱" },
-        { min: 10, msg: "Poniendo los primeros cimientos 🏗️" },
-        { min: 30, msg: "Diseñando tu futuro, paso a paso 📐" },
-        { min: 50, msg: "¡Mitad de carrera! Ya casi eres arquitecto/a 🏛️" },
-        { min: 75, msg: "La estructura está sólida, falta poco para el acabado 🎨" },
-        { min: 90, msg: "¡Preparando la entrega final! 🎓" },
+        { min: 15, msg: "Poniendo los primeros cimientos 🏗️" },
+        { min: 40, msg: "Diseñando tu futuro, paso a paso 📐" },
+        { min: 60, msg: "¡Mitad de carrera superada! Vas por buen camino 🏛️" },
+        { min: 85, msg: "La estructura está sólida, falta muy poco 🎨" },
         { min: 100, msg: "¡Felicidades Arquitecto/a! Proyecto completado 🌟" }
     ];
 
-    function actualizarMensaje(porcentaje) {
-        const texto = [...mensajes].reverse().find(m => porcentaje >= m.min);
-        document.getElementById('mensajeMotivacion').textContent = texto ? texto.msg : mensajes[0].msg;
+   const mallaData = [
+  /* ---------- PRIMER AÑO ---------- */
+  {
+    anio: "AÑO 1",
+    semestres: [
+      {
+        nombre: "1° SEMESTRE",
+        materias: [
+          { nombre: "Diseño Arquitectónico 1", prereq: [] },
+          { nombre: "Composición Arquitectónica 1", prereq: [] },
+          { nombre: "Introducción A La Teoría", prereq: [] },
+          { nombre: "Arte: Antigüedad A S. XVIII", prereq: [] },
+          { nombre: "Representación Arquitectónica 1", prereq: [] },
+          { nombre: "Introducción A La Edificación", prereq: [] },
+          { nombre: "Matemática Aplicada", prereq: [] },
+        ]
+      },
+      {
+        nombre: "2° SEMESTRE",
+        materias: [
+          { nombre: "Física Aplicada", prereq: ["Matemática Aplicada"] },
+          { nombre: "Diseño Arquitectónico 2", prereq: ["Diseño Arquitectónico 1","Composición Arquitectónica 1","Introducción A La Teoría","Representación Arquitectónica 1","Introducción A La Edificación"] },
+          { nombre: "Composición Arquitectónica 2", prereq: ["Composición Arquitectónica 1","Diseño Arquitectónico 1"] },
+          { nombre: "Sistemas Constructivos Básicos", prereq: ["Introducción A La Edificación"] },
+          { nombre: "Arte: Moderno Y Contemporáneo", prereq: ["Arte: Antigüedad A S. XVIII"] },
+          { nombre: "Topografía", prereq: ["Introducción A La Edificación","Matemática Aplicada"] },
+          { nombre: "Dibujo A Mano Alzada", prereq: [] },
+        ]
+      },
+      {
+        nombre: "VERANO",
+        materias: [
+          { nombre: "Taller De Diseño Arquitectónico 1", prereq: ["Representación Arquitectónica 1","Diseño Arquitectónico 2"] },
+          { nombre: "Taller De Visualización", prereq: [] },
+          { nombre: "Geomática", prereq: [] },
+        ]
+      }
+    ]
+  },
+  /* ---------- SEGUNDO AÑO ---------- */
+  {
+    anio: "AÑO 2",
+    semestres: [
+      {
+        nombre: "1° SEMESTRE",
+        materias: [
+          { nombre: "Español", prereq: [] },
+          { nombre: "Diseño Arquitectónico 3", prereq: ["Introducción A La Teoría","Diseño Arquitectónico 2","Composición Arquitectónica 2","Sistemas Constructivos Básicos","Topografía","Taller De Diseño Arquitectónico 1"] },
+          { nombre: "Interpretación De La Arquitectura", prereq: ["Introducción A La Teoría"] },
+          { nombre: "Representación Arquitectónica 2", prereq: ["Representación Arquitectónica 1"] },
+          { nombre: "Tecnología Del Hormigón Armado", prereq: ["Introducción A La Edificación","Sistemas Constructivos Básicos"] },
+          { nombre: "Modelos Estructurales", prereq: ["Física Aplicada"] },
+          { nombre: "Introducción A La Investigación", prereq: [] },
+        ]
+      },
+      {
+        nombre: "2° SEMESTRE",
+        materias: [
+          { nombre: "Inglés", prereq: [] },
+          { nombre: "Sociedad Medio Ambiente Y Des.", prereq: ["Diseño Arquitectónico 3","Introducción A La Edificación"] },
+          { nombre: "Diseño Arquitectónico 4", prereq: ["Diseño Arquitectónico 3","Interpretación De La Arquitectura","Representación Arquitectónica 2","Tecnología Del Hormigón Armado"] },
+          { nombre: "Textos Y Contextos De La Arq. Latinoamericana", prereq: ["Interpretación De La Arquitectura"] },
+          { nombre: "Representación Arquitectónica 3 La Arquitectura", prereq: ["Representación Arquitectónica 2"] },
+          { nombre: "Sistemas Constructivos Especiales", prereq: ["Tecnología Del Hormigón Armado"] },
+          { nombre: "Análisis Estructural", prereq: ["Modelos Estructurales"] },
+        ]
+      },
+      {
+        nombre: "VERANO",
+        materias: [
+          { nombre: "Taller De Diseño Arquitectónico 2", prereq: ["Taller De Diseño Arquitectónico 1","Diseño Arquitectónico 4","Representación Arquitectónica 3 La Arquitectura","Sistemas Constructivos Especiales"] },
+          { nombre: "Electiva 1", prereq: [] },
+          { nombre: "Electiva 2", prereq: [] },
+        ]
+      }
+    ]
+  },
+  /* ---------- TERCER AÑO ---------- */
+  {
+    anio: "AÑO 3",
+    semestres: [
+      {
+        nombre: "1° SEMESTRE",
+        materias: [
+          { nombre: "Historia De Pma En El Mundo Global", prereq: [] },
+          { nombre: "Diseño Arquitectónico 5", prereq: ["Diseño Arquitectónico 4","Textos Y Contextos De La Arq. Latinoamericana","Representación Arquitectónica 3 La Arquitectura","Sistemas Constructivos Especiales","Taller De Diseño Arquitectónico 2"] },
+          { nombre: "Crítica De La Arquitectura Y Pensamiento Contemporáneo", prereq: ["Textos Y Contextos De La Arq. Latinoamericana"] },
+          { nombre: "Representación Arquitectónica 4", prereq: ["Representación Arquitectónica 3 La Arquitectura"] },
+          { nombre: "Sistema Constructivos Complejos", prereq: ["Sistemas Constructivos Especiales"] },
+          { nombre: "Instalaciones Para Edificio 1", prereq: ["Física Aplicada"] },
+          { nombre: "Espacios Abiertos Vecinales", prereq: ["Sociedad Medio Ambiente Y Des.","Topografía","Introducción A La Investigación","Diseño Arquitectónico 4"] },
+        ]
+      },
+      {
+        nombre: "2° SEMESTRE",
+        materias: [
+          { nombre: "Geografía De Panamá", prereq: [] },
+          { nombre: "Diseño Arquitectónico 6", prereq: ["Diseño Arquitectónico 5","Crítica De La Arquitectura Y Pensamiento Contemporáneo","Representación Arquitectónica 4","Sistema Constructivos Complejos","Instalaciones Para Edificio 1"] },
+          { nombre: "Arquitectura Y Ciudad 1", prereq: ["Arte: Moderno Y Contemporáneo"] },
+          { nombre: "Representación Arquitectónica 5", prereq: ["Representación Arquitectónica 4"] },
+          { nombre: "Gestión De Seguridad Y Salud Ocupacional", prereq: ["Sistema Constructivos Complejos"] },
+          { nombre: "Instalaciones Para Edificio 2", prereq: ["Instalaciones Para Edificio 1"] },
+          { nombre: "Ciudad Y Comunidad", prereq: ["Diseño Arquitectónico 5","Espacios Abiertos Vecinales"] },
+        ]
+      },
+      {
+        nombre: "VERANO",
+        materias: [
+          { nombre: "Taller De Diseño Arquitectónico 3", prereq: ["Taller De Diseño Arquitectónico 2","Sistema Constructivos Complejos","Diseño Arquitectónico 5","Representación Arquitectónica 5"] },
+          { nombre: "Práctica Supervisada 1", prereq: ["Gestión De Seguridad Y Salud Ocupacional"] },
+          { nombre: "Optativa 1", prereq: [] },
+        ]
+      }
+    ]
+  },
+  /* ---------- CUARTO AÑO ---------- */
+  {
+    anio: "AÑO 4",
+    semestres: [
+      {
+        nombre: "1° SEMESTRE",
+        materias: [
+          { nombre: "Diseño Arquitectónico 7", prereq: ["Sistema Constructivos Complejos","Diseño Arquitectónico 6","Instalaciones Para Edificio 2","Taller De Diseño Arquitectónico 3","Representación Arquitectónica 5"] },
+          { nombre: "Arquitectura Y Ciudad 2", prereq: ["Sistema Constructivos Complejos","Diseño Arquitectónico 6","Instalaciones Para Edificio 2","Taller De Diseño Arquitectónico 3","Representación Arquitectónica 5"] },
+          { nombre: "Representación Arquitectónica 6", prereq: ["Representación Arquitectónica 5"] },
+          { nombre: "Taller De Planos Y Especificaciones", prereq: ["Introducción A La Investigación"] },
+          { nombre: "Diseño Estructural Simplificado", prereq: ["Análisis Estructural","Sistema Constructivos Complejos"] },
+          { nombre: "Instalaciones Para Edificas 3", prereq: ["Instalaciones Para Edificio 2"] },
+          { nombre: "Urbanismo", prereq: ["Geomática","Diseño Arquitectónico 6","Ciudad Y Comunidad"] },
+        ]
+      },
+      {
+        nombre: "2° SEMESTRE",
+        materias: [
+          { nombre: "Diseño Arquitectónico 8", prereq: ["Diseño Arquitectónico 7","Representación Arquitectónica 6","Diseño Estructural Simplificado","Instalaciones Para Edificios 3"] },
+          { nombre: "Arquitectura Y Ciudad 3", prereq: ["Arquitectura Y Ciudad 2"] },
+          { nombre: "Presupuesto De Obra", prereq: ["Sistema Constructivos Complejos","Taller De Planos Y Especificaciones"] },
+          { nombre: "Estructuras Especiales", prereq: ["Diseño Estructural Simplificado"] },
+          { nombre: "Instalaciones Para Edificios 4", prereq: ["Instalaciones Para Edificas 3"] },
+          { nombre: "Espacios Abiertos Urbanos", prereq: ["Diseño Arquitectónico 7","Urbanismo"] },
+          { nombre: "Metodología Para La Elab. De Tesis", prereq: ["Diseño Arquitectónico 7","Arquitectura Y Ciudad 2","Representación Arquitectónica 6","Taller De Planos Y Especificaciones","Diseño Estructural Simplificado","Instalaciones Para Edificio 3","Urbanismo"] },
+        ]
+      },
+      {
+        nombre: "VERANO",
+        materias: [
+          { nombre: "Taller De Urbanismo", prereq: ["Diseño Arquitectónico 8","Espacios Abiertos Urbanos"] },
+          { nombre: "Práctica Supervisada 2", prereq: ["Práctica Supervisada 1"] },
+          { nombre: "Optativa 2", prereq: [] },
+        ]
+      }
+    ]
+  },
+  /* ---------- QUINTO AÑO ---------- */
+  {
+    anio: "AÑO 5",
+    semestres: [
+      {
+        nombre: "1° SEMESTRE",
+        materias: [
+          { nombre: "Hist. De Las Relaciones De Pma Con Los EE.UU. I", prereq: [] },
+          { nombre: "Diseño Arquitectónico 9", prereq: ["Diseño Arquitectónico 8","Estructuras Especiales","Instalaciones Para Edificios 4"] },
+          { nombre: "Arquitectura Y Ciudad 4", prereq: ["Arquitectura Y Ciudad 3"] },
+          { nombre: "Programación Y Control De PYT", prereq: ["Taller De Planos Y Especificaciones","Presupuesto De Obra"] },
+          { nombre: "Gestión Profesional", prereq: ["Diseño Arquitectónico 8","Práctica Supervisada 2"] },
+          { nombre: "Ciudad Y Territorio", prereq: ["Taller De Urbanismo"] },
+          { nombre: "Trabajo De Graduación 1", prereq: ["Diseño Arquitectónico 7","Arquitectura Y Ciudad 3","Representación Arquitectónica 6","Taller De Planos Y Especificaciones","Diseño Estructural Simplificado","Instalaciones Para Edificios 3","Urbanismo"] },
+        ]
+      },
+      {
+        nombre: "2° SEMESTRE",
+        materias: [
+          { nombre: "Hist. De Las Relaciones De Pma Con Los EE.UU. II", prereq: [] },
+          { nombre: "Diseño Arquitectónico 10", prereq: ["Diseño Arquitectónico 9"] },
+          { nombre: "Patrimonio Arquitectónico", prereq: ["Arquitectura Y Ciudad 4"] },
+          { nombre: "Gestión Y Mantenimiento De Edificios", prereq: ["Práctica Supervisada 2","Programación Y Control De PYT"] },
+          { nombre: "Práctica Supervisada 3", prereq: ["Representación Arquitectónica 6","Práctica Supervisada 2","Diseño Arquitectónico 9","Programación Y Control De PYT","Gestión Profesional","Ciudad Y Territorio"] },
+          { nombre: "Gestión Urbana Y Territorial", prereq: ["Taller De Urbanismo","Diseño Arquitectónico 9","Gestión Profesional","Ciudad Y Territorio"] },
+          { nombre: "Trabajo De Graduación 2", prereq: ["Trabajo De Graduación 1"] },
+        ]
+      }
+    ]
+  }
+];
+    // --- Lógica de Autenticación ---
+    document.getElementById('googleLoginBtn').onclick = () => {
+        signInWithPopup(auth, googleProvider).catch(err => alert("Error Google: " + err.message));
+    };
+
+    document.getElementById('registerBtn').onclick = () => {
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('pass').value;
+        createUserWithEmailAndPassword(auth, email, pass).catch(err => alert("Error: " + err.message));
+    };
+
+    document.getElementById('loginBtn').onclick = () => {
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('pass').value;
+        signInWithEmailAndPassword(auth, email, pass).catch(err => alert("Error de acceso"));
+    };
+
+    document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            usuarioActual = user;
+            document.getElementById('authBox').style.display = 'none';
+            document.getElementById('userBox').style.display = 'block';
+            document.getElementById('userEmail').textContent = user.email;
+            onSnapshot(doc(db, "usuarios", user.uid), (docSnap) => {
+                aprobadas = docSnap.exists() ? docSnap.data().materias : {};
+                renderMalla();
+            });
+        } else {
+            usuarioActual = null;
+            aprobadas = {};
+            document.getElementById('authBox').style.display = 'block';
+            document.getElementById('userBox').style.display = 'none';
+            renderMalla();
+        }
+    });
+
+    async function toggleMateria(nombre) {
+        if (!usuarioActual) { alert("¡Inicia sesión para sincronizar!"); return; }
+        if (aprobadas[nombre]) { delete aprobadas[nombre]; } else { aprobadas[nombre] = true; }
+        await setDoc(doc(db, "usuarios", usuarioActual.uid), { materias: aprobadas });
     }
 
     function renderMalla() {
@@ -101,30 +400,28 @@
             const anioDiv = document.createElement('div');
             anioDiv.className = 'anio';
             anioDiv.innerHTML = `<h2>${anio.anio}</h2>`;
-
             anio.semestres.forEach(sem => {
                 const semDiv = document.createElement('div');
                 semDiv.className = 'semestre';
                 semDiv.innerHTML = `<h3>${sem.nombre}</h3>`;
-
                 sem.materias.forEach(m => {
                     totalMat++;
                     const esAprobada = aprobadas[m.nombre];
                     if(esAprobada) aprobadasCount++;
-
                     const bloqueada = !m.prereq.every(p => aprobadas[p]);
+                    
                     const mDiv = document.createElement('div');
                     mDiv.className = `materia ${esAprobada ? 'aprobada' : ''} ${bloqueada && !esAprobada ? 'bloqueada' : ''}`;
                     mDiv.textContent = m.nombre;
-                    
+
                     // Tooltip dinámico
                     if (bloqueada && !esAprobada) {
                         const faltan = m.prereq.filter(p => !aprobadas[p]);
-                        mDiv.setAttribute('data-tooltip', `🔒 Prerrequisitos: ${faltan.join(", ")}`);
+                        mDiv.setAttribute('data-tooltip', `🔒 Faltan: ${faltan.join(", ")}`);
                     } else if (esAprobada) {
-                        mDiv.setAttribute('data-tooltip', `✅ Materia aprobada`);
+                        mDiv.setAttribute('data-tooltip', `✅ Completada`);
                     } else {
-                        mDiv.setAttribute('data-tooltip', `🔓 Disponible para marcar`);
+                        mDiv.setAttribute('data-tooltip', `🔓 Lista para cursar`);
                     }
 
                     mDiv.onclick = () => { if (!bloqueada || esAprobada) toggleMateria(m.nombre); };
@@ -138,10 +435,16 @@
         const porc = Math.round((aprobadasCount / totalMat) * 100) || 0;
         document.getElementById('progresoFill').style.width = porc + '%';
         document.getElementById('porcentajeProgreso').textContent = `Progreso: ${porc}%`;
-        actualizarMensaje(porc);
+        
+        const frase = [...frasesMotivacionales].reverse().find(f => porc >= f.min);
+        document.getElementById('mensajeMotivacion').textContent = frase ? frase.msg : frasesMotivacionales[0].msg;
     }
 
-    // (Mantén el resto de tus funciones toggleMateria y onAuthStateChanged igual)
+    document.getElementById('reiniciarBtn').onclick = async () => {
+        if(usuarioActual && confirm("¿Deseas reiniciar todo tu progreso en la nube?")) {
+            await setDoc(doc(db, "usuarios", usuarioActual.uid), { materias: {} });
+        }
+    }
 </script>
 </body>
 </html>
