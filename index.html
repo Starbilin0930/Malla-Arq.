@@ -5,27 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Malla Curricular Arquitectura - Sincronizada</title>
     <style>
-        /* Estilos optimizados para móvil y PC */
         body { font-family: 'Arial Rounded MT Bold', Arial, sans-serif; background-color: #f8f9f3; margin: 0; padding: 10px; color: #333; }
         h1 { text-align: center; color: #6b8e23; font-size: 1.5rem; }
-        
         .auth-container { max-width: 400px; margin: 0 auto 20px; padding: 15px; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; }
         input { width: 85%; padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; }
-        
         .progreso-container { width: 95%; max-width: 900px; margin: 0 auto 20px; text-align: center; }
         .progreso-bar { width: 100%; background-color: #e2ecd7; border-radius: 12px; height: 20px; overflow: hidden; }
         .progreso-fill { height: 100%; width: 0%; background-color: #556b2f; transition: width 0.5s ease; }
-        
         button { background-color: #6b8e23; color: white; border: none; border-radius: 10px; padding: 10px 15px; cursor: pointer; margin: 5px; font-weight: bold; }
         button:hover { background-color: #556b2f; }
         .btn-outline { background: transparent; color: #6b8e23; border: 1px solid #6b8e23; }
-
         .malla { display: flex; gap: 20px; overflow-x: auto; padding: 20px; }
         .anio { min-width: 250px; background: #e8f0e2; border-radius: 15px; padding: 15px; flex-shrink: 0; }
         .anio h2 { text-align: center; color: #556b2f; font-size: 1.2rem; }
         .semestre { background: #f0f6ed; border-radius: 10px; padding: 10px; margin-bottom: 15px; }
         .semestre h3 { text-align: center; font-size: 0.9rem; background: #d8e3c7; padding: 5px; border-radius: 5px; }
-        
         .materia { background: #d8e3c7; margin: 5px 0; padding: 10px; border-radius: 8px; cursor: pointer; text-align: center; font-size: 0.85rem; transition: 0.3s; }
         .materia.aprobada { background: #556b2f !important; color: white; text-decoration: line-through; }
         .materia.bloqueada { background: #cfcfcf; cursor: not-allowed; opacity: 0.6; }
@@ -75,10 +69,9 @@
     const db = getFirestore(app);
 
     let usuarioActual = null;
-    let aprobadas = {}; // Objeto para guardar { "Nombre Materia": true }
+    let aprobadas = {}; 
 
     const mallaData = [
-        /* PRIMER AÑO */
         { anio: "AÑO 1", semestres: [
             { nombre: "1° SEMESTRE", materias: [
                 { nombre: "Diseño Arquitectónico 1", prereq: [] },
@@ -96,167 +89,111 @@
                 { nombre: "Sistemas Constructivos Básicos", prereq: ["Introducción A La Edificación"] },
                 { nombre: "Arte: Moderno Y Contemporáneo", prereq: ["Arte: Antigüedad A S. XVIII"] },
                 { nombre: "Topografía", prereq: ["Introducción A La Edificación","Matemática Aplicada"] },
-                { nombre: "Dibujo A Mano Alzada", prereq: [] },
-        ]
-      },
-      {
-        nombre: "VERANO",
-        materias: [
-          { nombre: "Taller De Diseño Arquitectónico 1", prereq: ["Representación Arquitectónica 1","Diseño Arquitectónico 2"] },
-          { nombre: "Taller De Visualización", prereq: [] },
-          { nombre: "Geomática", prereq: [] },
-        ]
-      }
-    ]
-  },
-  /* ---------- SEGUNDO AÑO ---------- */
-  {
-    anio: "AÑO 2",
-    semestres: [
-      {
-        nombre: "1° SEMESTRE",
-        materias: [
-          { nombre: "Español", prereq: [] },
-          { nombre: "Diseño Arquitectónico 3", prereq: ["Introducción A La Teoría","Diseño Arquitectónico 2","Composición Arquitectónica 2","Sistemas Constructivos Básicos","Topografía","Taller De Diseño Arquitectónico 1"] },
-          { nombre: "Interpretación De La Arquitectura", prereq: ["Introducción A La Teoría"] },
-          { nombre: "Representación Arquitectónica 2", prereq: ["Representación Arquitectónica 1"] },
-          { nombre: "Tecnología Del Hormigón Armado", prereq: ["Introducción A La Edificación","Sistemas Constructivos Básicos"] },
-          { nombre: "Modelos Estructurales", prereq: ["Física Aplicada"] },
-          { nombre: "Introducción A La Investigación", prereq: [] },
-        ]
-      },
-      {
-        nombre: "2° SEMESTRE",
-        materias: [
-          { nombre: "Inglés", prereq: [] },
-          { nombre: "Sociedad Medio Ambiente Y Des.", prereq: ["Diseño Arquitectónico 3","Introducción A La Edificación"] },
-          { nombre: "Diseño Arquitectónico 4", prereq: ["Diseño Arquitectónico 3","Interpretación De La Arquitectura","Representación Arquitectónica 2","Tecnología Del Hormigón Armado"] },
-          { nombre: "Textos Y Contextos De La Arq. Latinoamericana", prereq: ["Interpretación De La Arquitectura"] },
-          { nombre: "Representación Arquitectónica 3 La Arquitectura", prereq: ["Representación Arquitectónica 2"] },
-          { nombre: "Sistemas Constructivos Especiales", prereq: ["Tecnología Del Hormigón Armado"] },
-          { nombre: "Análisis Estructural", prereq: ["Modelos Estructurales"] },
-        ]
-      },
-      {
-        nombre: "VERANO",
-        materias: [
-          { nombre: "Taller De Diseño Arquitectónico 2", prereq: ["Taller De Diseño Arquitectónico 1","Diseño Arquitectónico 4","Representación Arquitectónica 3 La Arquitectura","Sistemas Constructivos Especiales"] },
-          { nombre: "Electiva 1", prereq: [] },
-          { nombre: "Electiva 2", prereq: [] },
-        ]
-      }
-    ]
-  },
-  /* ---------- TERCER AÑO ---------- */
-  {
-    anio: "AÑO 3",
-    semestres: [
-      {
-        nombre: "1° SEMESTRE",
-        materias: [
-          { nombre: "Historia De Pma En El Mundo Global", prereq: [] },
-          { nombre: "Diseño Arquitectónico 5", prereq: ["Diseño Arquitectónico 4","Textos Y Contextos De La Arq. Latinoamericana","Representación Arquitectónica 3 La Arquitectura","Sistemas Constructivos Especiales","Taller De Diseño Arquitectónico 2"] },
-          { nombre: "Crítica De La Arquitectura Y Pensamiento Contemporáneo", prereq: ["Textos Y Contextos De La Arq. Latinoamericana"] },
-          { nombre: "Representación Arquitectónica 4", prereq: ["Representación Arquitectónica 3 La Arquitectura"] },
-          { nombre: "Sistema Constructivos Complejos", prereq: ["Sistemas Constructivos Especiales"] },
-          { nombre: "Instalaciones Para Edificio 1", prereq: ["Física Aplicada"] },
-          { nombre: "Espacios Abiertos Vecinales", prereq: ["Sociedad Medio Ambiente Y Des.","Topografía","Introducción A La Investigación","Diseño Arquitectónico 4"] },
-        ]
-      },
-      {
-        nombre: "2° SEMESTRE",
-        materias: [
-          { nombre: "Geografía De Panamá", prereq: [] },
-          { nombre: "Diseño Arquitectónico 6", prereq: ["Diseño Arquitectónico 5","Crítica De La Arquitectura Y Pensamiento Contemporáneo","Representación Arquitectónica 4","Sistema Constructivos Complejos","Instalaciones Para Edificio 1"] },
-          { nombre: "Arquitectura Y Ciudad 1", prereq: ["Arte: Moderno Y Contemporáneo"] },
-          { nombre: "Representación Arquitectónica 5", prereq: ["Representación Arquitectónica 4"] },
-          { nombre: "Gestión De Seguridad Y Salud Ocupacional", prereq: ["Sistema Constructivos Complejos"] },
-          { nombre: "Instalaciones Para Edificio 2", prereq: ["Instalaciones Para Edificio 1"] },
-          { nombre: "Ciudad Y Comunidad", prereq: ["Diseño Arquitectónico 5","Espacios Abiertos Vecinales"] },
-        ]
-      },
-      {
-        nombre: "VERANO",
-        materias: [
-          { nombre: "Taller De Diseño Arquitectónico 3", prereq: ["Taller De Diseño Arquitectónico 2","Sistema Constructivos Complejos","Diseño Arquitectónico 5","Representación Arquitectónica 5"] },
-          { nombre: "Práctica Supervisada 1", prereq: ["Gestión De Seguridad Y Salud Ocupacional"] },
-          { nombre: "Optativa 1", prereq: [] },
-        ]
-      }
-    ]
-  },
-  /* ---------- CUARTO AÑO ---------- */
-  {
-    anio: "AÑO 4",
-    semestres: [
-      {
-        nombre: "1° SEMESTRE",
-        materias: [
-          { nombre: "Diseño Arquitectónico 7", prereq: ["Sistema Constructivos Complejos","Diseño Arquitectónico 6","Instalaciones Para Edificio 2","Taller De Diseño Arquitectónico 3","Representación Arquitectónica 5"] },
-          { nombre: "Arquitectura Y Ciudad 2", prereq: ["Sistema Constructivos Complejos","Diseño Arquitectónico 6","Instalaciones Para Edificio 2","Taller De Diseño Arquitectónico 3","Representación Arquitectónica 5"] },
-          { nombre: "Representación Arquitectónica 6", prereq: ["Representación Arquitectónica 5"] },
-          { nombre: "Taller De Planos Y Especificaciones", prereq: ["Introducción A La Investigación"] },
-          { nombre: "Diseño Estructural Simplificado", prereq: ["Análisis Estructural","Sistema Constructivos Complejos"] },
-          { nombre: "Instalaciones Para Edificas 3", prereq: ["Instalaciones Para Edificio 2"] },
-          { nombre: "Urbanismo", prereq: ["Geomática","Diseño Arquitectónico 6","Ciudad Y Comunidad"] },
-        ]
-      },
-      {
-        nombre: "2° SEMESTRE",
-        materias: [
-          { nombre: "Diseño Arquitectónico 8", prereq: ["Diseño Arquitectónico 7","Representación Arquitectónica 6","Diseño Estructural Simplificado","Instalaciones Para Edificios 3"] },
-          { nombre: "Arquitectura Y Ciudad 3", prereq: ["Arquitectura Y Ciudad 2"] },
-          { nombre: "Presupuesto De Obra", prereq: ["Sistema Constructivos Complejos","Taller De Planos Y Especificaciones"] },
-          { nombre: "Estructuras Especiales", prereq: ["Diseño Estructural Simplificado"] },
-          { nombre: "Instalaciones Para Edificios 4", prereq: ["Instalaciones Para Edificas 3"] },
-          { nombre: "Espacios Abiertos Urbanos", prereq: ["Diseño Arquitectónico 7","Urbanismo"] },
-          { nombre: "Metodología Para La Elab. De Tesis", prereq: ["Diseño Arquitectónico 7","Arquitectura Y Ciudad 2","Representación Arquitectónica 6","Taller De Planos Y Especificaciones","Diseño Estructural Simplificado","Instalaciones Para Edificio 3","Urbanismo"] },
-        ]
-      },
-      {
-        nombre: "VERANO",
-        materias: [
-          { nombre: "Taller De Urbanismo", prereq: ["Diseño Arquitectónico 8","Espacios Abiertos Urbanos"] },
-          { nombre: "Práctica Supervisada 2", prereq: ["Práctica Supervisada 1"] },
-          { nombre: "Optativa 2", prereq: [] },
-        ]
-      }
-    ]
-  },
-  /* ---------- QUINTO AÑO ---------- */
-  {
-    anio: "AÑO 5",
-    semestres: [
-      {
-        nombre: "1° SEMESTRE",
-        materias: [
-          { nombre: "Hist. De Las Relaciones De Pma Con Los EE.UU. I", prereq: [] },
-          { nombre: "Diseño Arquitectónico 9", prereq: ["Diseño Arquitectónico 8","Estructuras Especiales","Instalaciones Para Edificios 4"] },
-          { nombre: "Arquitectura Y Ciudad 4", prereq: ["Arquitectura Y Ciudad 3"] },
-          { nombre: "Programación Y Control De PYT", prereq: ["Taller De Planos Y Especificaciones","Presupuesto De Obra"] },
-          { nombre: "Gestión Profesional", prereq: ["Diseño Arquitectónico 8","Práctica Supervisada 2"] },
-          { nombre: "Ciudad Y Territorio", prereq: ["Taller De Urbanismo"] },
-          { nombre: "Trabajo De Graduación 1", prereq: ["Diseño Arquitectónico 7","Arquitectura Y Ciudad 3","Representación Arquitectónica 6","Taller De Planos Y Especificaciones","Diseño Estructural Simplificado","Instalaciones Para Edificios 3","Urbanismo"] },
-        ]
-      },
-      {
-        nombre: "2° SEMESTRE",
-        materias: [
-          { nombre: "Hist. De Las Relaciones De Pma Con Los EE.UU. II", prereq: [] },
-          { nombre: "Diseño Arquitectónico 10", prereq: ["Diseño Arquitectónico 9"] },
-          { nombre: "Patrimonio Arquitectónico", prereq: ["Arquitectura Y Ciudad 4"] },
-          { nombre: "Gestión Y Mantenimiento De Edificios", prereq: ["Práctica Supervisada 2","Programación Y Control De PYT"] },
-          { nombre: "Práctica Supervisada 3", prereq: ["Representación Arquitectónica 6","Práctica Supervisada 2","Diseño Arquitectónico 9","Programación Y Control De PYT","Gestión Profesional","Ciudad Y Territorio"] },
-          { nombre: "Gestión Urbana Y Territorial", prereq: ["Taller De Urbanismo","Diseño Arquitectónico 9","Gestión Profesional","Ciudad Y Territorio"] },
-          { nombre: "Trabajo De Graduación 2", prereq: ["Trabajo De Graduación 1"] },
-        ]
-      }
-    ]
-  }
-];
+                { nombre: "Dibujo A Mano Alzada", prereq: [] }
+            ]},
+            { nombre: "VERANO", materias: [
+                { nombre: "Taller De Diseño Arquitectónico 1", prereq: ["Representación Arquitectónica 1","Diseño Arquitectónico 2"] },
+                { nombre: "Taller De Visualización", prereq: [] },
+                { nombre: "Geomática", prereq: [] }
+            ]}
+        ]},
+        { anio: "AÑO 2", semestres: [
+            { nombre: "1° SEMESTRE", materias: [
+                { nombre: "Español", prereq: [] },
+                { nombre: "Diseño Arquitectónico 3", prereq: ["Introducción A La Teoría","Diseño Arquitectónico 2","Composición Arquitectónica 2","Sistemas Constructivos Básicos","Topografía","Taller De Diseño Arquitectónico 1"] },
+                { nombre: "Interpretación De La Arquitectura", prereq: ["Introducción A La Teoría"] },
+                { nombre: "Representación Arquitectónica 2", prereq: ["Representación Arquitectónica 1"] },
+                { nombre: "Tecnología Del Hormigón Armado", prereq: ["Introducción A La Edificación","Sistemas Constructivos Básicos"] },
+                { nombre: "Modelos Estructurales", prereq: ["Física Aplicada"] },
+                { nombre: "Introducción A La Investigación", prereq: [] }
+            ]},
+            { nombre: "2° SEMESTRE", materias: [
+                { nombre: "Inglés", prereq: [] },
+                { nombre: "Sociedad Medio Ambiente Y Des.", prereq: ["Diseño Arquitectónico 3","Introducción A La Edificación"] },
+                { nombre: "Diseño Arquitectónico 4", prereq: ["Diseño Arquitectónico 3","Interpretación De La Arquitectura","Representación Arquitectónica 2","Tecnología Del Hormigón Armado"] },
+                { nombre: "Textos Y Contextos De La Arq. Latinoamericana", prereq: ["Interpretación De La Arquitectura"] },
+                { nombre: "Representación Arquitectónica 3 La Arquitectura", prereq: ["Representación Arquitectónica 2"] },
+                { nombre: "Sistemas Constructivos Especiales", prereq: ["Tecnología Del Hormigón Armado"] },
+                { nombre: "Análisis Estructural", prereq: ["Modelos Estructurales"] }
+            ]},
+            { nombre: "VERANO", materias: [
+                { nombre: "Taller De Diseño Arquitectónico 2", prereq: ["Taller De Diseño Arquitectónico 1","Diseño Arquitectónico 4","Representación Arquitectónica 3 La Arquitectura","Sistemas Constructivos Especiales"] },
+                { nombre: "Electiva 1", prereq: [] },
+                { nombre: "Electiva 2", prereq: [] }
+            ]}
+        ]},
+        { anio: "AÑO 3", semestres: [
+            { nombre: "1° SEMESTRE", materias: [
+                { nombre: "Historia De Pma En El Mundo Global", prereq: [] },
+                { nombre: "Diseño Arquitectónico 5", prereq: ["Diseño Arquitectónico 4","Textos Y Contextos De La Arq. Latinoamericana","Representación Arquitectónica 3 La Arquitectura","Sistemas Constructivos Especiales","Taller De Diseño Arquitectónico 2"] },
+                { nombre: "Crítica De La Arquitectura Y Pensamiento Contemporáneo", prereq: ["Textos Y Contextos De La Arq. Latinoamericana"] },
+                { nombre: "Representación Arquitectónica 4", prereq: ["Representación Arquitectónica 3 La Arquitectura"] },
+                { nombre: "Sistema Constructivos Complejos", prereq: ["Sistemas Constructivos Especiales"] },
+                { nombre: "Instalaciones Para Edificio 1", prereq: ["Física Aplicada"] },
+                { nombre: "Espacios Abiertos Vecinales", prereq: ["Sociedad Medio Ambiente Y Des.","Topografía","Introducción A La Investigación","Diseño Arquitectónico 4"] }
+            ]},
+            { nombre: "2° SEMESTRE", materias: [
+                { nombre: "Geografía De Panamá", prereq: [] },
+                { nombre: "Diseño Arquitectónico 6", prereq: ["Diseño Arquitectónico 5","Crítica De La Arquitectura Y Pensamiento Contemporáneo","Representación Arquitectónica 4","Sistema Constructivos Complejos","Instalaciones Para Edificio 1"] },
+                { nombre: "Arquitectura Y Ciudad 1", prereq: ["Arte: Moderno Y Contemporáneo"] },
+                { nombre: "Representación Arquitectónica 5", prereq: ["Representación Arquitectónica 4"] },
+                { nombre: "Gestión De Seguridad Y Salud Ocupacional", prereq: ["Sistema Constructivos Complejos"] },
+                { nombre: "Instalaciones Para Edificio 2", prereq: ["Instalaciones Para Edificio 1"] },
+                { nombre: "Ciudad Y Comunidad", prereq: ["Diseño Arquitectónico 5","Espacios Abiertos Vecinales"] }
+            ]},
+            { nombre: "VERANO", materias: [
+                { nombre: "Taller De Diseño Arquitectónico 3", prereq: ["Taller De Diseño Arquitectónico 2","Sistema Constructivos Complejos","Diseño Arquitectónico 5","Representación Arquitectónica 5"] },
+                { nombre: "Práctica Supervisada 1", prereq: ["Gestión De Seguridad Y Salud Ocupacional"] },
+                { nombre: "Optativa 1", prereq: [] }
+            ]}
+        ]},
+        { anio: "AÑO 4", semestres: [
+            { nombre: "1° SEMESTRE", materias: [
+                { nombre: "Diseño Arquitectónico 7", prereq: ["Sistema Constructivos Complejos","Diseño Arquitectónico 6","Instalaciones Para Edificio 2","Taller De Diseño Arquitectónico 3","Representación Arquitectónica 5"] },
+                { nombre: "Arquitectura Y Ciudad 2", prereq: ["Sistema Constructivos Complejos","Diseño Arquitectónico 6","Instalaciones Para Edificio 2","Taller De Diseño Arquitectónico 3","Representación Arquitectónica 5"] },
+                { nombre: "Representación Arquitectónica 6", prereq: ["Representación Arquitectónica 5"] },
+                { nombre: "Taller De Planos Y Especificaciones", prereq: ["Introducción A La Investigación"] },
+                { nombre: "Diseño Estructural Simplificado", prereq: ["Análisis Estructural","Sistema Constructivos Complejos"] },
+                { nombre: "Instalaciones Para Edificas 3", prereq: ["Instalaciones Para Edificio 2"] },
+                { nombre: "Urbanismo", prereq: ["Geomática","Diseño Arquitectónico 6","Ciudad Y Comunidad"] }
+            ]},
+            { nombre: "2° SEMESTRE", materias: [
+                { nombre: "Diseño Arquitectónico 8", prereq: ["Diseño Arquitectónico 7","Representación Arquitectónica 6","Diseño Estructural Simplificado","Instalaciones Para Edificios 3"] },
+                { nombre: "Arquitectura Y Ciudad 3", prereq: ["Arquitectura Y Ciudad 2"] },
+                { nombre: "Presupuesto De Obra", prereq: ["Sistema Constructivos Complejos","Taller De Planos Y Especificaciones"] },
+                { nombre: "Estructuras Especiales", prereq: ["Diseño Estructural Simplificado"] },
+                { nombre: "Instalaciones Para Edificios 4", prereq: ["Instalaciones Para Edificas 3"] },
+                { nombre: "Espacios Abiertos Urbanos", prereq: ["Diseño Arquitectónico 7","Urbanismo"] },
+                { nombre: "Metodología Para La Elab. De Tesis", prereq: ["Diseño Arquitectónico 7","Arquitectura Y Ciudad 2","Representación Arquitectónica 6","Taller De Planos Y Especificaciones","Diseño Estructural Simplificado","Instalaciones Para Edificio 3","Urbanismo"] }
+            ]},
+            { nombre: "VERANO", materias: [
+                { nombre: "Taller De Urbanismo", prereq: ["Diseño Arquitectónico 8","Espacios Abiertos Urbanos"] },
+                { nombre: "Práctica Supervisada 2", prereq: ["Práctica Supervisada 1"] },
+                { nombre: "Optativa 2", prereq: [] }
+            ]}
+        ]},
+        { anio: "AÑO 5", semestres: [
+            { nombre: "1° SEMESTRE", materias: [
+                { nombre: "Hist. De Las Relaciones De Pma Con Los EE.UU. I", prereq: [] },
+                { nombre: "Diseño Arquitectónico 9", prereq: ["Diseño Arquitectónico 8","Estructuras Especiales","Instalaciones Para Edificios 4"] },
+                { nombre: "Arquitectura Y Ciudad 4", prereq: ["Arquitectura Y Ciudad 3"] },
+                { nombre: "Programación Y Control De PYT", prereq: ["Taller De Planos Y Especificaciones","Presupuesto De Obra"] },
+                { nombre: "Gestión Profesional", prereq: ["Diseño Arquitectónico 8","Práctica Supervisada 2"] },
+                { nombre: "Ciudad Y Territorio", prereq: ["Taller De Urbanismo"] },
+                { nombre: "Trabajo De Graduación 1", prereq: ["Diseño Arquitectónico 7","Arquitectura Y Ciudad 3","Representación Arquitectónica 6","Taller De Planos Y Especificaciones","Diseño Estructural Simplificado","Instalaciones Para Edificios 3","Urbanismo"] }
+            ]},
+            { nombre: "2° SEMESTRE", materias: [
+                { nombre: "Hist. De Las Relaciones De Pma Con Los EE.UU. II", prereq: [] },
+                { nombre: "Diseño Arquitectónico 10", prereq: ["Diseño Arquitectónico 9"] },
+                { nombre: "Patrimonio Arquitectónico", prereq: ["Arquitectura Y Ciudad 4"] },
+                { nombre: "Gestión Y Mantenimiento De Edificios", prereq: ["Práctica Supervisada 2","Programación Y Control De PYT"] },
+                { nombre: "Práctica Supervisada 3", prereq: ["Representación Arquitectónica 6","Práctica Supervisada 2","Diseño Arquitectónico 9","Programación Y Control De PYT","Gestión Profesional","Ciudad Y Territorio"] },
+                { nombre: "Gestión Urbana Y Territorial", prereq: ["Taller De Urbanismo","Diseño Arquitectónico 9","Gestión Profesional","Ciudad Y Territorio"] },
+                { nombre: "Trabajo De Graduación 2", prereq: ["Trabajo De Graduación 1"] }
+            ]}
+        ]}
+    ];
 
-
-    // --- FUNCIONES DE AUTENTICACIÓN ---
     document.getElementById('registerBtn').onclick = () => {
         const email = document.getElementById('email').value;
         const pass = document.getElementById('pass').value;
@@ -277,7 +214,6 @@
             document.getElementById('authBox').style.display = 'none';
             document.getElementById('userBox').style.display = 'block';
             document.getElementById('userEmail').textContent = user.email;
-            // Escuchar cambios en la base de datos en tiempo real
             onSnapshot(doc(db, "usuarios", user.uid), (docSnap) => {
                 aprobadas = docSnap.exists() ? docSnap.data().materias : {};
                 renderMalla();
@@ -291,15 +227,9 @@
         }
     });
 
-    // --- LÓGICA DE LA MALLA ---
     async function toggleMateria(nombre) {
         if (!usuarioActual) { alert("¡Inicia sesión para guardar!"); return; }
-        
-        if (aprobadas[nombre]) {
-            delete aprobadas[nombre];
-        } else {
-            aprobadas[nombre] = true;
-        }
+        if (aprobadas[nombre]) { delete aprobadas[nombre]; } else { aprobadas[nombre] = true; }
         await setDoc(doc(db, "usuarios", usuarioActual.uid), { materias: aprobadas });
     }
 
@@ -313,27 +243,19 @@
             const anioDiv = document.createElement('div');
             anioDiv.className = 'anio';
             anioDiv.innerHTML = `<h2>${anio.anio}</h2>`;
-
             anio.semestres.forEach(sem => {
                 const semDiv = document.createElement('div');
                 semDiv.className = 'semestre';
                 semDiv.innerHTML = `<h3>${sem.nombre}</h3>`;
-
                 sem.materias.forEach(m => {
                     totalMat++;
                     const esAprobada = aprobadas[m.nombre];
                     if(esAprobada) aprobadasCount++;
-
                     const bloqueada = !m.prereq.every(p => aprobadas[p]);
-
                     const mDiv = document.createElement('div');
                     mDiv.className = `materia ${esAprobada ? 'aprobada' : ''} ${bloqueada && !esAprobada ? 'bloqueada' : ''}`;
                     mDiv.textContent = m.nombre;
-                    
-                    mDiv.onclick = () => {
-                        if (!bloqueada || esAprobada) toggleMateria(m.nombre);
-                    };
-
+                    mDiv.onclick = () => { if (!bloqueada || esAprobada) toggleMateria(m.nombre); };
                     semDiv.appendChild(mDiv);
                 });
                 anioDiv.appendChild(semDiv);
@@ -341,7 +263,6 @@
             container.appendChild(anioDiv);
         });
 
-        // Actualizar barra de progreso
         const porc = Math.round((aprobadasCount / totalMat) * 100) || 0;
         document.getElementById('progresoFill').style.width = porc + '%';
         document.getElementById('porcentajeProgreso').textContent = `Progreso: ${porc}% (${aprobadasCount} de ${totalMat})`;
