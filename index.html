@@ -129,22 +129,27 @@ input{
   <button id="logoutBtn">Cerrar sesión</button>
 </div>
 
-<!-- Barra de progreso -->
-<div class="progreso-container">
-  <div class="progreso-bar">
-    <div class="progreso-fill" id="progresoFill"></div>
-  </div>
-  <div id="porcentajeProgreso">Progreso: 0%</div>
-  <div class="mensaje-motivacion" id="mensajeMotivacion">Todo gran proyecto empieza con una idea 🌱</div>
-  <button id="reiniciarBtn">Reiniciar progreso</button>
-</div>
+<!-- 🔒 CONTENIDO PROTEGIDO (solo cuando hay sesión) -->
+<div id="appContent" style="display:none;">
 
-<div class="malla" id="malla"></div>
+  <!-- Barra de progreso -->
+  <div class="progreso-container">
+    <div class="progreso-bar">
+      <div class="progreso-fill" id="progresoFill"></div>
+    </div>
+    <div id="porcentajeProgreso">Progreso: 0%</div>
+    <div class="mensaje-motivacion" id="mensajeMotivacion">Todo gran proyecto empieza con una idea 🌱</div>
+    <button id="reiniciarBtn">Reiniciar progreso</button>
+  </div>
+
+  <div class="malla" id="malla"></div>
+
+</div>
 
 
 <!-- ================== TU SCRIPT ORIGINAL ================== -->
 <script>
-/* 👇 aquí sigue exactamente tu JS de la malla tal como lo pegaste */
+/* 👇 aquí pega tu JS de la malla tal como lo tienes */
 </script>
 
 
@@ -180,11 +185,11 @@ const logoutBtn = document.getElementById("logoutBtn");
 const authBox = document.getElementById("authBox");
 const userBox = document.getElementById("userBox");
 const userEmail = document.getElementById("userEmail");
+const appContent = document.getElementById("appContent");
 
 /* login */
 loginBtn.onclick = async ()=>{ try{
   await signInWithEmailAndPassword(auth,email.value,pass.value);
-  alert("Inicio correcto");
 }catch(e){alert(e.message);}}
 
 /* registro */
@@ -212,10 +217,12 @@ onAuthStateChanged(auth,user=>{
   if(user){
     authBox.style.display="none";
     userBox.style.display="block";
+    appContent.style.display="block";
     userEmail.textContent=user.email;
   }else{
     authBox.style.display="block";
     userBox.style.display="none";
+    appContent.style.display="none";
   }
 });
 </script>
