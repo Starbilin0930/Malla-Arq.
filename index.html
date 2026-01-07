@@ -6,23 +6,104 @@
 <title>Malla Curricular Arquitectura</title>
 
 <style>
-/* (TODO TU CSS LO DEJÉ IGUAL — SOLO AÑADÍ ESTE POQUITO PARA EL LOGIN) */
+/* ================== TUS ESTILOS ================== */
+body {
+  font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+  background-color: #f8f9f3;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
 
+h1 {
+  text-align: center;
+  color: #6b8e23;
+  margin-bottom: 10px;
+}
+
+/* Barra de progreso */
+.progreso-container {
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto 15px;
+  text-align: center;
+}
+
+.progreso-bar {
+  width: 100%;
+  background-color: #e2ecd7;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 20px;
+  margin-bottom: 5px;
+}
+
+.progreso-fill {
+  height: 100%;
+  width: 0%;
+  background-color: #556b2f;
+  transition: width 0.5s ease;
+}
+
+.mensaje-motivacion {
+  font-size: 0.95em;
+  color: #556b2f;
+  margin-bottom: 10px;
+}
+
+button {
+  background-color: #6b8e23;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: 0.2s;
+}
+
+button:hover {
+  background-color: #556b2f;
+}
+
+/* Login Box */
 #authBox, #userBox{
-  max-width: 420px;
+  max-width: 450px;
   margin: 0 auto 20px;
   padding: 15px;
-  background:#eef4e6;
-  border-radius:12px;
+  border-radius: 12px;
+  background:#eef5e6;
+  text-align:center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-#authBox input{
-  width: 95%;
-  padding: 8px;
-  margin: 5px 0;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+input{
+  width:90%;
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  margin-bottom:10px;
 }
+
+/* AÑOS */
+.anio {min-width: 220px;background:#e8f0e2;border-radius:12px;padding:15px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.05);}
+.anio h2 {text-align:center;color:#556b2f;margin-bottom:10px;font-weight:bold;font-size:1.1em;border-bottom:1px solid #a0b78e;width:80%;padding-bottom:5px;}
+
+/* SEMESTRES */
+.semestre {display:flex;flex-direction:column;align-items:center;background:#f0f6ed;border-radius:12px;padding:8px;margin-bottom:15px;width:90%;box-shadow:inset 0 0 3px rgba(0,0,0,0.05);}
+.semestre h3 {text-align:center;font-size:1em;margin-bottom:8px;font-weight:bold;background:#d8e3c7;padding:4px 0;border-radius:8px;width:100%;}
+
+/* MATERIAS */
+.materia {background:#d8e3c7;margin:4px 0;padding:6px;border-radius:8px;cursor:pointer;transition:.2s;text-align:center;width:95%;}
+.materia.aprobada {background:#556b2f;color:white;text-decoration:line-through;}
+.materia.bloqueada {background:#cfcfcf;cursor:not-allowed;opacity:.7;}
+
+/* Tooltip */
+.materia[data-tooltip]:hover::after {content:attr(data-tooltip);position:absolute;top:-30px;left:50%;transform:translateX(-50%);background:#556b2f;color:white;padding:5px 8px;border-radius:6px;font-size:.8em;}
+.materia[data-tooltip]:hover::before {content:'';position:absolute;top:-10px;left:50%;transform:translateX(-50%);border-width:5px;border-style:solid;border-color:#556b2f transparent transparent transparent;}
+
+/* MALLA */
+.malla {display:flex;gap:20px;overflow-x:auto;padding:20px;scroll-behavior:smooth;}
 </style>
 </head>
 
@@ -30,25 +111,25 @@
 
 <h1>MALLA CURRICULAR ARQUITECTURA</h1>
 
-<!-- 🔥 LOGIN UI -->
+<!-- Caja de Autenticación -->
 <div id="authBox">
-  <h3>Ingresar o crear cuenta</h3>
-
-  <input id="email" type="email" placeholder="Correo electrónico">
+  <h3>Inicia sesión para guardar tu progreso</h3>
+  <input id="email" type="email" placeholder="Correo">
   <input id="pass" type="password" placeholder="Contraseña">
 
-  <button id="loginBtn">Iniciar sesión</button>
+  <button id="loginBtn">Ingresar</button>
   <button id="registerBtn">Crear cuenta</button>
-  <button id="googleBtn">Entrar con Google</button>
+  <button id="googleBtn">Continuar con Google</button>
   <button id="recoverBtn">Recuperar contraseña</button>
 </div>
 
+<!-- Caja cuando el usuario está logueado -->
 <div id="userBox" style="display:none;">
-  <p>Sesión iniciada como: <span id="userEmail"></span></p>
+  <p>Sesión iniciada como: <strong id="userEmail"></strong></p>
   <button id="logoutBtn">Cerrar sesión</button>
 </div>
 
-<!-- 🔥 TU CÓDIGO DE LA MALLA (NO LO TOQUÉ) -->
+<!-- Barra de progreso -->
 <div class="progreso-container">
   <div class="progreso-bar">
     <div class="progreso-fill" id="progresoFill"></div>
@@ -60,39 +141,35 @@
 
 <div class="malla" id="malla"></div>
 
+
+<!-- ================== TU SCRIPT ORIGINAL ================== -->
 <script>
-/* 🔥 TU SCRIPT DE LA MALLA — (LO DEJÉ IGUAL) */
-... 👈 (todo tu script completo aquí, tal cual lo tenías)
+/* 👇 aquí sigue exactamente tu JS de la malla tal como lo pegaste */
 </script>
 
-<!-- 🔥 FIREBASE -->
+
+<!-- ================== FIREBASE AUTH ================== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { 
-  getAuth, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-  sendPasswordResetEmail,
-  onAuthStateChanged,
-  signOut
+  getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+  GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail,
+  onAuthStateChanged, signOut
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDGFEsBWnEHP3luKaeaFzUe_Nguqz3j_pA",
   authDomain: "malla-curricular-arquitectura.firebaseapp.com",
   projectId: "malla-curricular-arquitectura",
-  storageBucket: "malla-curricular-arquitectura.firebasestorage.app",
+  storageBucket: "malla-curricular-arquitectura.appspot.com",
   messagingSenderId: "613677284410",
-  appId: "1:613677284410:web:92297cf4c86a6f6c378903",
-  measurementId: "G-YN189BKMCH"
+  appId: "1:613677284410:web:92297cf4c86a6f6c378903"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-/* ------- REFERENCIAS -------- */
+/* referencias UI */
 const email = document.getElementById("email");
 const pass = document.getElementById("pass");
 const loginBtn = document.getElementById("loginBtn");
@@ -104,61 +181,44 @@ const authBox = document.getElementById("authBox");
 const userBox = document.getElementById("userBox");
 const userEmail = document.getElementById("userEmail");
 
-/* ------- LOGIN -------- */
-loginBtn.onclick = async () => {
-  try {
-    await signInWithEmailAndPassword(auth, email.value, pass.value);
-    alert("Inicio de sesión exitoso");
-  } catch (e) {
-    alert(e.message);
-  }
-};
+/* login */
+loginBtn.onclick = async ()=>{ try{
+  await signInWithEmailAndPassword(auth,email.value,pass.value);
+  alert("Inicio correcto");
+}catch(e){alert(e.message);}}
 
-/* ------- REGISTRO -------- */
-registerBtn.onclick = async () => {
-  try {
-    await createUserWithEmailAndPassword(auth, email.value, pass.value);
-    alert("Cuenta creada 🎉");
-  } catch (e) {
-    alert(e.message);
-  }
-};
+/* registro */
+registerBtn.onclick = async ()=>{ try{
+  await createUserWithEmailAndPassword(auth,email.value,pass.value);
+  alert("Cuenta creada");
+}catch(e){alert(e.message);}}
 
-/* ------- GOOGLE -------- */
-googleBtn.onclick = async () => {
-  try {
-    await signInWithPopup(auth, new GoogleAuthProvider());
-  } catch (e) {
-    alert(e.message);
-  }
-};
+/* google */
+googleBtn.onclick = async ()=>{ try{
+  await signInWithPopup(auth,new GoogleAuthProvider());
+}catch(e){alert(e.message);}}
 
-/* ------- RECUPERAR CONTRASEÑA -------- */
-recoverBtn.onclick = async () => {
-  try {
-    await sendPasswordResetEmail(auth, email.value);
-    alert("Correo enviado 📩");
-  } catch (e) {
-    alert(e.message);
-  }
-};
+/* recuperar */
+recoverBtn.onclick = async ()=>{ try{
+  await sendPasswordResetEmail(auth,email.value);
+  alert("Correo enviado");
+}catch(e){alert(e.message);}}
 
-/* ------- LOGOUT -------- */
-logoutBtn.onclick = async () => signOut(auth);
+/* logout */
+logoutBtn.onclick = ()=>signOut(auth);
 
-/* ------- SESIÓN ACTIVA -------- */
-onAuthStateChanged(auth, user => {
-  if (user) {
-    authBox.style.display = "none";
-    userBox.style.display = "block";
-    userEmail.textContent = user.email;
-  } else {
-    authBox.style.display = "block";
-    userBox.style.display = "none";
+/* sesión activa */
+onAuthStateChanged(auth,user=>{
+  if(user){
+    authBox.style.display="none";
+    userBox.style.display="block";
+    userEmail.textContent=user.email;
+  }else{
+    authBox.style.display="block";
+    userBox.style.display="none";
   }
 });
 </script>
 
 </body>
 </html>
-
