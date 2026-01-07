@@ -505,6 +505,134 @@ document.getElementById('reiniciarBtn').addEventListener('click', () => {
 /* --------- Inicialización --------- */
 renderMalla();
 </script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { 
+  getAuth, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  sendPasswordResetEmail,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
+import { 
+  getFirestore, 
+  doc, 
+  setDoc, 
+  getDoc 
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDGFEsBWnEHP3luKaeaFzUe_Nguqz3j_pA",
+  authDomain: "malla-curricular-arquitectura.firebaseapp.com",
+  projectId: "malla-curricular-arquitectura",
+  storageBucket: "malla-curricular-arquitectura.firebasestorage.app",
+  messagingSenderId: "613677284410",
+  appId: "1:613677284410:web:92297cf4c86a6f6c378903",
+  measurementId: "G-YN189BKMCH"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { 
+  getAuth, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  sendPasswordResetEmail,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDGFEsBWnEHP3luKaeaFzUe_Nguqz3j_pA",
+  authDomain: "malla-curricular-arquitectura.firebaseapp.com",
+  projectId: "malla-curricular-arquitectura",
+  storageBucket: "malla-curricular-arquitectura.firebasestorage.app",
+  messagingSenderId: "613677284410",
+  appId: "1:613677284410:web:92297cf4c86a6f6c378903",
+  measurementId: "G-YN189BKMCH"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// --------- REFERENCIAS HTML ----------
+const email = document.getElementById("email");
+const pass = document.getElementById("pass");
+const loginBtn = document.getElementById("loginBtn");
+const registerBtn = document.getElementById("registerBtn");
+const googleBtn = document.getElementById("googleBtn");
+const recoverBtn = document.getElementById("recoverBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const authBox = document.getElementById("authBox");
+const userBox = document.getElementById("userBox");
+const userEmail = document.getElementById("userEmail");
+
+// --------- LOGIN ----------
+loginBtn.onclick = async () => {
+  try {
+    await signInWithEmailAndPassword(auth, email.value, pass.value);
+    alert("Inicio de sesión exitoso");
+  } catch (e) {
+    alert("Error: " + e.message);
+  }
+};
+
+// --------- REGISTRO ----------
+registerBtn.onclick = async () => {
+  try {
+    await createUserWithEmailAndPassword(auth, email.value, pass.value);
+    alert("Cuenta creada correctamente 🎉");
+  } catch (e) {
+    alert("Error: " + e.message);
+  }
+};
+
+// --------- LOGIN CON GOOGLE ----------
+googleBtn.onclick = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  } catch (e) {
+    alert("Error: " + e.message);
+  }
+};
+
+// --------- RECUPERAR CONTRASEÑA ----------
+recoverBtn.onclick = async () => {
+  try {
+    await sendPasswordResetEmail(auth, email.value);
+    alert("Te enviamos un correo para recuperar tu contraseña 📩");
+  } catch (e) {
+    alert("Error: " + e.message);
+  }
+};
+
+// --------- CERRAR SESIÓN ----------
+logoutBtn.onclick = async () => {
+  await signOut(auth);
+};
+
+// --------- DETECTAR SESIÓN ACTIVA ----------
+onAuthStateChanged(auth, user => {
+  if (user) {
+    authBox.style.display = "none";
+    userBox.style.display = "block";
+    userEmail.textContent = user.email;
+  } else {
+    authBox.style.display = "block";
+    userBox.style.display = "none";
+  }
+});
+  
+// 👉 desde aquí sigue tu código JS
+</script>
 </body>
 </html>
